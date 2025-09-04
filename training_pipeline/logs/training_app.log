@@ -1,0 +1,1685 @@
+2025-09-03 13:24:03,928 - __main__ - ERROR - Error in main: [Errno 2] No such file or directory: 'config/config.yaml'
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 99, in main
+    config = load_config()
+             ^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 16, in load_config
+    with open(config_path, 'r') as file:
+         ^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'config/config.yaml'
+2025-09-03 13:24:31,239 - __main__ - ERROR - Error reading/cleaning data: [Errno 2] No such file or directory: 'data/raw/raw_data.csv'
+2025-09-03 13:24:31,239 - __main__ - ERROR - Error in main: [Errno 2] No such file or directory: 'data/raw/raw_data.csv'
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 100, in main
+    cleaned_dataset, labels = read_and_clean_data(config, relationship_type, logger)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 33, in read_and_clean_data
+    dataset = pd.read_csv(
+              ^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 912, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 577, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 1407, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 1661, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/pandas/io/common.py", line 859, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/raw/raw_data.csv'
+2025-09-03 13:25:47,429 - __main__ - INFO - Read 100 records and 728 labels
+2025-09-03 13:25:47,429 - __main__ - INFO - Starting normalization of 100 records
+2025-09-03 13:25:47,431 - __main__ - INFO - Normalized column: last_name
+2025-09-03 13:25:47,431 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 13:25:47,432 - __main__ - INFO - Normalized column: address
+2025-09-03 13:25:47,432 - __main__ - INFO - Normalized column: city
+2025-09-03 13:25:47,432 - __main__ - INFO - Normalized column: state
+2025-09-03 13:25:47,436 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 13:25:47,436 - __main__ - INFO - Cleaned SSN column
+2025-09-03 13:25:47,437 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 13:25:47,437 - __main__ - INFO - Normalization complete: 100 records remaining
+2025-09-03 13:25:47,871 - __main__ - INFO - Database setup completed
+2025-09-03 13:25:47,872 - __main__ - INFO - Created database engine for public.records
+2025-09-03 13:25:47,888 - __main__ - INFO - Dataset size: 100 records
+2025-09-03 13:25:47,889 - __main__ - ERROR - Error in compare function: [Errno 2] No such file or directory: 'scripts/postgres_functions_updated.sql'
+2025-09-03 13:25:47,889 - __main__ - ERROR - Error in main: [Errno 2] No such file or directory: 'scripts/postgres_functions_updated.sql'
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 107, in main
+    compare(
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 43, in compare
+    with open('scripts/postgres_functions_updated.sql', 'r') as file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'scripts/postgres_functions_updated.sql'
+2025-09-03 13:29:10,237 - __main__ - INFO - Read 100 records and 728 labels
+2025-09-03 13:29:10,237 - __main__ - INFO - Starting normalization of 100 records
+2025-09-03 13:29:10,239 - __main__ - INFO - Normalized column: last_name
+2025-09-03 13:29:10,239 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 13:29:10,240 - __main__ - INFO - Normalized column: address
+2025-09-03 13:29:10,240 - __main__ - INFO - Normalized column: city
+2025-09-03 13:29:10,240 - __main__ - INFO - Normalized column: state
+2025-09-03 13:29:10,244 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 13:29:10,244 - __main__ - INFO - Cleaned SSN column
+2025-09-03 13:29:10,245 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 13:29:10,245 - __main__ - INFO - Normalization complete: 100 records remaining
+2025-09-03 13:29:10,407 - __main__ - INFO - Database setup completed
+2025-09-03 13:29:10,407 - __main__ - INFO - Created database engine for public.records
+2025-09-03 13:29:10,421 - __main__ - INFO - Dataset size: 100 records
+2025-09-03 13:29:10,421 - __main__ - ERROR - Error in compare function: [Errno 2] No such file or directory: '/family-linkage-fix/scripts/postgres_functions_updated.sql'
+2025-09-03 13:29:10,421 - __main__ - ERROR - Error in main: [Errno 2] No such file or directory: '/family-linkage-fix/scripts/postgres_functions_updated.sql'
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 107, in main
+    compare(
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 43, in compare
+    with open('/family-linkage-fix/scripts/postgres_functions_updated.sql', 'r') as file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/family-linkage-fix/scripts/postgres_functions_updated.sql'
+2025-09-03 13:31:03,938 - __main__ - INFO - Read 100 records and 728 labels
+2025-09-03 13:31:03,938 - __main__ - INFO - Starting normalization of 100 records
+2025-09-03 13:31:03,940 - __main__ - INFO - Normalized column: last_name
+2025-09-03 13:31:03,940 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 13:31:03,940 - __main__ - INFO - Normalized column: address
+2025-09-03 13:31:03,940 - __main__ - INFO - Normalized column: city
+2025-09-03 13:31:03,941 - __main__ - INFO - Normalized column: state
+2025-09-03 13:31:03,943 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 13:31:03,943 - __main__ - INFO - Cleaned SSN column
+2025-09-03 13:31:03,944 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 13:31:03,944 - __main__ - INFO - Normalization complete: 100 records remaining
+2025-09-03 13:31:04,084 - __main__ - INFO - Database setup completed
+2025-09-03 13:31:04,084 - __main__ - INFO - Created database engine for public.records
+2025-09-03 13:31:04,095 - __main__ - INFO - Dataset size: 100 records
+2025-09-03 13:31:04,095 - __main__ - ERROR - Error in compare function: [Errno 2] No such file or directory: 'family-linkage-fix/scripts/postgres_functions_updated.sql'
+2025-09-03 13:31:04,095 - __main__ - ERROR - Error in main: [Errno 2] No such file or directory: 'family-linkage-fix/scripts/postgres_functions_updated.sql'
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 107, in main
+    compare(
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 43, in compare
+    with open('family-linkage-fix/scripts/postgres_functions_updated.sql', 'r') as file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'family-linkage-fix/scripts/postgres_functions_updated.sql'
+2025-09-03 13:31:26,633 - __main__ - INFO - Read 100 records and 728 labels
+2025-09-03 13:31:26,633 - __main__ - INFO - Starting normalization of 100 records
+2025-09-03 13:31:26,635 - __main__ - INFO - Normalized column: last_name
+2025-09-03 13:31:26,635 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 13:31:26,636 - __main__ - INFO - Normalized column: address
+2025-09-03 13:31:26,636 - __main__ - INFO - Normalized column: city
+2025-09-03 13:31:26,636 - __main__ - INFO - Normalized column: state
+2025-09-03 13:31:26,640 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 13:31:26,640 - __main__ - INFO - Cleaned SSN column
+2025-09-03 13:31:26,640 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 13:31:26,640 - __main__ - INFO - Normalization complete: 100 records remaining
+2025-09-03 13:31:26,780 - __main__ - INFO - Database setup completed
+2025-09-03 13:31:26,780 - __main__ - INFO - Created database engine for public.records
+2025-09-03 13:31:26,793 - __main__ - INFO - Dataset size: 100 records
+2025-09-03 13:31:26,843 - __main__ - INFO - PostgreSQL functions initialized
+2025-09-03 13:31:26,843 - __main__ - INFO - Using exhaustive comparison strategy (dataset <= 10000)
+2025-09-03 13:31:27,810 - __main__ - INFO - Exhaustive comparison completed
+2025-09-03 13:31:27,813 - __main__ - INFO - Comparison complete: 4950 record pairs generated
+2025-09-03 13:31:27,897 - __main__ - INFO - Training dataset prepared: 4982 record pairs
+2025-09-03 13:32:35,566 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-03 13:32:35,566 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-03 13:32:35,571 - __main__ - INFO - Normalized column: last_name
+2025-09-03 13:32:35,574 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 13:32:35,578 - __main__ - INFO - Normalized column: address
+2025-09-03 13:32:35,582 - __main__ - INFO - Normalized column: city
+2025-09-03 13:32:35,585 - __main__ - INFO - Normalized column: state
+2025-09-03 13:32:35,619 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 13:32:35,620 - __main__ - INFO - Cleaned SSN column
+2025-09-03 13:32:35,621 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 13:32:35,621 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-03 13:32:35,829 - __main__ - INFO - Database setup completed
+2025-09-03 13:32:35,829 - __main__ - INFO - Created database engine for public.records
+2025-09-03 13:32:35,837 - __main__ - INFO - Dataset size: 2519 records
+2025-09-03 13:32:35,865 - __main__ - INFO - PostgreSQL functions initialized
+2025-09-03 13:32:35,865 - __main__ - INFO - Using exhaustive comparison strategy (dataset <= 10000)
+2025-09-03 13:42:42,428 - __main__ - INFO - Exhaustive comparison completed
+2025-09-03 13:42:43,966 - __main__ - INFO - Comparison complete: 3171421 record pairs generated
+2025-09-03 13:43:02,820 - __main__ - INFO - Training dataset prepared: 3171785 record pairs
+2025-09-03 13:52:25,250 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-03 13:52:25,251 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-03 13:52:25,254 - __main__ - INFO - Normalized column: last_name
+2025-09-03 13:52:25,257 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 13:52:25,262 - __main__ - INFO - Normalized column: address
+2025-09-03 13:52:25,266 - __main__ - INFO - Normalized column: city
+2025-09-03 13:52:25,269 - __main__ - INFO - Normalized column: state
+2025-09-03 13:52:25,305 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 13:52:25,306 - __main__ - INFO - Cleaned SSN column
+2025-09-03 13:52:25,307 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 13:52:25,307 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-03 13:52:25,659 - __main__ - INFO - Database setup completed
+2025-09-03 13:52:25,659 - __main__ - INFO - Created database engine for public.records
+2025-09-03 13:52:25,670 - __main__ - INFO - Dataset size: 2519 records
+2025-09-03 13:52:25,700 - __main__ - INFO - PostgreSQL functions initialized
+2025-09-03 13:52:25,700 - __main__ - INFO - Using optimized blocking strategy (dataset > 1000)
+2025-09-03 13:52:25,702 - __main__ - ERROR - Error in optimized comparison: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 13:52:25,702 - __main__ - ERROR - Error in compare function: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 13:52:25,702 - __main__ - ERROR - Error in main: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UndefinedFunction: function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 106, in main
+    compare(
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 54, in compare
+    _run_optimized_comparison(engine, job_schema, records_table, logger,
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 172, in _run_optimized_comparison
+    connection.execute(text(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1306, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 332, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1498, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1862, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2043, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:00:03,447 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-03 14:00:03,447 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-03 14:00:03,452 - __main__ - INFO - Normalized column: last_name
+2025-09-03 14:00:03,455 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 14:00:03,459 - __main__ - INFO - Normalized column: address
+2025-09-03 14:00:03,463 - __main__ - INFO - Normalized column: city
+2025-09-03 14:00:03,466 - __main__ - INFO - Normalized column: state
+2025-09-03 14:00:03,501 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 14:00:03,501 - __main__ - INFO - Cleaned SSN column
+2025-09-03 14:00:03,503 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 14:00:03,503 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-03 14:00:03,707 - __main__ - INFO - Database setup completed
+2025-09-03 14:00:03,707 - __main__ - INFO - Created database engine for public.records
+2025-09-03 14:00:03,716 - __main__ - INFO - Dataset size: 2519 records
+2025-09-03 14:00:03,728 - __main__ - ERROR - Error in compare function: (psycopg2.errors.InvalidFunctionDefinition) cannot change return type of existing function
+HINT:  Use DROP FUNCTION compare_records_exhaustive(text,text) first.
+
+[SQL: -- Updated PostgreSQL functions following Chris's specifications
+-- Functions now accept job_schema and records_table parameters
+
+-- Function to create blocking keys with schema/table parameters
+CREATE OR REPLACE FUNCTION create_blocking_keys(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records',
+    batch_size INTEGER DEFAULT 100000
+) RETURNS INTEGER AS $$
+DECLARE
+    total_records INTEGER;
+    processed_records INTEGER := 0;
+    current_batch INTEGER;
+    sql_query TEXT;
+BEGIN
+    -- Get total record count
+    sql_query := format('SELECT COUNT(*) FROM %%I.%%I', job_schema, records_table);
+    EXECUTE sql_query INTO total_records;
+    
+    -- Drop and recreate record_blocks table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.record_blocks', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.record_blocks (
+            gid INTEGER,
+            block_key TEXT,
+            PRIMARY KEY (gid, block_key)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Create blocking keys in batches
+    WHILE processed_records < total_records LOOP
+        current_batch := LEAST(batch_size, total_records - processed_records);
+        
+        sql_query := format('
+            INSERT INTO %%I.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '''') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '''') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '''') as block_key
+            FROM %%I.%%I 
+            WHERE gid > %%s AND gid <= %%s
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)',
+            job_schema, job_schema, records_table, processed_records, processed_records + current_batch);
+        
+        EXECUTE sql_query;
+        processed_records := processed_records + current_batch;
+        
+        RAISE NOTICE 'Processed %% of %% records (%%.1f%%%%)', 
+            processed_records, total_records, 
+            (processed_records::FLOAT / total_records * 100);
+    END LOOP;
+    
+    -- Create index for performance
+    sql_query := format('CREATE INDEX IF NOT EXISTS idx_record_blocks_key ON %%I.record_blocks(block_key)', job_schema);
+    EXECUTE sql_query;
+    
+    RETURN processed_records;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function for optimized record comparison with schema/table parameters
+CREATE OR REPLACE FUNCTION compare_records_optimized(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records',
+    min_gid_1 INTEGER DEFAULT 1,
+    max_gid_1 INTEGER DEFAULT 50,
+    min_gid_2 INTEGER DEFAULT 51,
+    max_gid_2 INTEGER DEFAULT 100,
+    max_block_size INTEGER DEFAULT 500,
+    batch_size INTEGER DEFAULT 100000
+) RETURNS INTEGER AS $$
+DECLARE
+    total_pairs INTEGER := 0;
+    sql_query TEXT;
+BEGIN
+    -- Drop and recreate processed_records table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.processed_records', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.processed_records (
+            gid_1 INTEGER,
+            gid_2 INTEGER,
+            fname_1 TEXT, lname_1 TEXT, byear_1 INTEGER, bmonth_1 INTEGER, bday_1 INTEGER,
+            fname_2 TEXT, lname_2 TEXT, byear_2 INTEGER, bmonth_2 INTEGER, bday_2 INTEGER,
+            PRIMARY KEY (gid_1, gid_2)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Insert record pairs using blocking
+    sql_query := format('
+        INSERT INTO %%I.processed_records 
+        SELECT DISTINCT
+            r1.gid as gid_1, r2.gid as gid_2,
+            r1.fname as fname_1, r1.lname as lname_1, r1.byear as byear_1, 
+            r1.bmonth as bmonth_1, r1.bday as bday_1,
+            r2.fname as fname_2, r2.lname as lname_2, r2.byear as byear_2,
+            r2.bmonth as bmonth_2, r2.bday as bday_2
+        FROM %%I.record_blocks b1
+        JOIN %%I.record_blocks b2 ON b1.block_key = b2.block_key
+        JOIN %%I.%%I r1 ON b1.gid = r1.gid
+        JOIN %%I.%%I r2 ON b2.gid = r2.gid
+        WHERE r1.gid >= %%s AND r1.gid <= %%s
+        AND r2.gid >= %%s AND r2.gid <= %%s
+        AND r1.gid < r2.gid
+        AND b1.block_key IN (
+            SELECT block_key 
+            FROM %%I.record_blocks 
+            GROUP BY block_key 
+            HAVING COUNT(*) <= %%s
+        )',
+        job_schema, job_schema, job_schema, job_schema, records_table, 
+        job_schema, records_table, min_gid_1, max_gid_1, min_gid_2, max_gid_2,
+        job_schema, max_block_size);
+    
+    EXECUTE sql_query;
+    
+    -- Get count of inserted pairs
+    sql_query := format('SELECT COUNT(*) FROM %%I.processed_records', job_schema);
+    EXECUTE sql_query INTO total_pairs;
+    
+    RAISE NOTICE 'Generated %% record pairs', total_pairs;
+    RETURN total_pairs;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function for exhaustive record comparison with schema/table parameters
+CREATE OR REPLACE FUNCTION compare_records_exhaustive(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records'
+) RETURNS INTEGER AS $$
+DECLARE
+    total_pairs INTEGER := 0;
+    sql_query TEXT;
+BEGIN
+    -- Drop and recreate processed_records table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.processed_records', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.processed_records (
+            gid_1 INTEGER,
+            gid_2 INTEGER,
+            fname_1 TEXT, lname_1 TEXT, byear_1 INTEGER, bmonth_1 INTEGER, bday_1 INTEGER,
+            fname_2 TEXT, lname_2 TEXT, byear_2 INTEGER, bmonth_2 INTEGER, bday_2 INTEGER,
+            PRIMARY KEY (gid_1, gid_2)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Insert all possible record pairs (exhaustive comparison)
+    sql_query := format('
+        INSERT INTO %%I.processed_records 
+        SELECT 
+            r1.gid as gid_1, r2.gid as gid_2,
+            r1.fname as fname_1, r1.lname as lname_1, r1.byear as byear_1, 
+            r1.bmonth as bmonth_1, r1.bday as bday_1,
+            r2.fname as fname_2, r2.lname as lname_2, r2.byear as byear_2,
+            r2.bmonth as bmonth_2, r2.bday as bday_2
+        FROM %%I.%%I r1
+        CROSS JOIN %%I.%%I r2
+        WHERE r1.gid < r2.gid',
+        job_schema, job_schema, records_table, job_schema, records_table);
+    
+    EXECUTE sql_query;
+    
+    -- Get count of inserted pairs
+    sql_query := format('SELECT COUNT(*) FROM %%I.processed_records', job_schema);
+    EXECUTE sql_query INTO total_pairs;
+    
+    RAISE NOTICE 'Generated %% record pairs (exhaustive)', total_pairs;
+    RETURN total_pairs;
+END;
+$$ LANGUAGE plpgsql;
+]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:00:03,728 - __main__ - ERROR - Error in main: (psycopg2.errors.InvalidFunctionDefinition) cannot change return type of existing function
+HINT:  Use DROP FUNCTION compare_records_exhaustive(text,text) first.
+
+[SQL: -- Updated PostgreSQL functions following Chris's specifications
+-- Functions now accept job_schema and records_table parameters
+
+-- Function to create blocking keys with schema/table parameters
+CREATE OR REPLACE FUNCTION create_blocking_keys(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records',
+    batch_size INTEGER DEFAULT 100000
+) RETURNS INTEGER AS $$
+DECLARE
+    total_records INTEGER;
+    processed_records INTEGER := 0;
+    current_batch INTEGER;
+    sql_query TEXT;
+BEGIN
+    -- Get total record count
+    sql_query := format('SELECT COUNT(*) FROM %%I.%%I', job_schema, records_table);
+    EXECUTE sql_query INTO total_records;
+    
+    -- Drop and recreate record_blocks table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.record_blocks', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.record_blocks (
+            gid INTEGER,
+            block_key TEXT,
+            PRIMARY KEY (gid, block_key)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Create blocking keys in batches
+    WHILE processed_records < total_records LOOP
+        current_batch := LEAST(batch_size, total_records - processed_records);
+        
+        sql_query := format('
+            INSERT INTO %%I.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '''') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '''') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '''') as block_key
+            FROM %%I.%%I 
+            WHERE gid > %%s AND gid <= %%s
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)',
+            job_schema, job_schema, records_table, processed_records, processed_records + current_batch);
+        
+        EXECUTE sql_query;
+        processed_records := processed_records + current_batch;
+        
+        RAISE NOTICE 'Processed %% of %% records (%%.1f%%%%)', 
+            processed_records, total_records, 
+            (processed_records::FLOAT / total_records * 100);
+    END LOOP;
+    
+    -- Create index for performance
+    sql_query := format('CREATE INDEX IF NOT EXISTS idx_record_blocks_key ON %%I.record_blocks(block_key)', job_schema);
+    EXECUTE sql_query;
+    
+    RETURN processed_records;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function for optimized record comparison with schema/table parameters
+CREATE OR REPLACE FUNCTION compare_records_optimized(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records',
+    min_gid_1 INTEGER DEFAULT 1,
+    max_gid_1 INTEGER DEFAULT 50,
+    min_gid_2 INTEGER DEFAULT 51,
+    max_gid_2 INTEGER DEFAULT 100,
+    max_block_size INTEGER DEFAULT 500,
+    batch_size INTEGER DEFAULT 100000
+) RETURNS INTEGER AS $$
+DECLARE
+    total_pairs INTEGER := 0;
+    sql_query TEXT;
+BEGIN
+    -- Drop and recreate processed_records table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.processed_records', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.processed_records (
+            gid_1 INTEGER,
+            gid_2 INTEGER,
+            fname_1 TEXT, lname_1 TEXT, byear_1 INTEGER, bmonth_1 INTEGER, bday_1 INTEGER,
+            fname_2 TEXT, lname_2 TEXT, byear_2 INTEGER, bmonth_2 INTEGER, bday_2 INTEGER,
+            PRIMARY KEY (gid_1, gid_2)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Insert record pairs using blocking
+    sql_query := format('
+        INSERT INTO %%I.processed_records 
+        SELECT DISTINCT
+            r1.gid as gid_1, r2.gid as gid_2,
+            r1.fname as fname_1, r1.lname as lname_1, r1.byear as byear_1, 
+            r1.bmonth as bmonth_1, r1.bday as bday_1,
+            r2.fname as fname_2, r2.lname as lname_2, r2.byear as byear_2,
+            r2.bmonth as bmonth_2, r2.bday as bday_2
+        FROM %%I.record_blocks b1
+        JOIN %%I.record_blocks b2 ON b1.block_key = b2.block_key
+        JOIN %%I.%%I r1 ON b1.gid = r1.gid
+        JOIN %%I.%%I r2 ON b2.gid = r2.gid
+        WHERE r1.gid >= %%s AND r1.gid <= %%s
+        AND r2.gid >= %%s AND r2.gid <= %%s
+        AND r1.gid < r2.gid
+        AND b1.block_key IN (
+            SELECT block_key 
+            FROM %%I.record_blocks 
+            GROUP BY block_key 
+            HAVING COUNT(*) <= %%s
+        )',
+        job_schema, job_schema, job_schema, job_schema, records_table, 
+        job_schema, records_table, min_gid_1, max_gid_1, min_gid_2, max_gid_2,
+        job_schema, max_block_size);
+    
+    EXECUTE sql_query;
+    
+    -- Get count of inserted pairs
+    sql_query := format('SELECT COUNT(*) FROM %%I.processed_records', job_schema);
+    EXECUTE sql_query INTO total_pairs;
+    
+    RAISE NOTICE 'Generated %% record pairs', total_pairs;
+    RETURN total_pairs;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function for exhaustive record comparison with schema/table parameters
+CREATE OR REPLACE FUNCTION compare_records_exhaustive(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records'
+) RETURNS INTEGER AS $$
+DECLARE
+    total_pairs INTEGER := 0;
+    sql_query TEXT;
+BEGIN
+    -- Drop and recreate processed_records table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.processed_records', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.processed_records (
+            gid_1 INTEGER,
+            gid_2 INTEGER,
+            fname_1 TEXT, lname_1 TEXT, byear_1 INTEGER, bmonth_1 INTEGER, bday_1 INTEGER,
+            fname_2 TEXT, lname_2 TEXT, byear_2 INTEGER, bmonth_2 INTEGER, bday_2 INTEGER,
+            PRIMARY KEY (gid_1, gid_2)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Insert all possible record pairs (exhaustive comparison)
+    sql_query := format('
+        INSERT INTO %%I.processed_records 
+        SELECT 
+            r1.gid as gid_1, r2.gid as gid_2,
+            r1.fname as fname_1, r1.lname as lname_1, r1.byear as byear_1, 
+            r1.bmonth as bmonth_1, r1.bday as bday_1,
+            r2.fname as fname_2, r2.lname as lname_2, r2.byear as byear_2,
+            r2.bmonth as bmonth_2, r2.bday as bday_2
+        FROM %%I.%%I r1
+        CROSS JOIN %%I.%%I r2
+        WHERE r1.gid < r2.gid',
+        job_schema, job_schema, records_table, job_schema, records_table);
+    
+    EXECUTE sql_query;
+    
+    -- Get count of inserted pairs
+    sql_query := format('SELECT COUNT(*) FROM %%I.processed_records', job_schema);
+    EXECUTE sql_query INTO total_pairs;
+    
+    RAISE NOTICE 'Generated %% record pairs (exhaustive)', total_pairs;
+    RETURN total_pairs;
+END;
+$$ LANGUAGE plpgsql;
+]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.InvalidFunctionDefinition: cannot change return type of existing function
+HINT:  Use DROP FUNCTION compare_records_exhaustive(text,text) first.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 106, in main
+    compare(
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 46, in compare
+    connection.execute(text(sql_commands))
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1306, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 332, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1498, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1862, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2043, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.InvalidFunctionDefinition) cannot change return type of existing function
+HINT:  Use DROP FUNCTION compare_records_exhaustive(text,text) first.
+
+[SQL: -- Updated PostgreSQL functions following Chris's specifications
+-- Functions now accept job_schema and records_table parameters
+
+-- Function to create blocking keys with schema/table parameters
+CREATE OR REPLACE FUNCTION create_blocking_keys(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records',
+    batch_size INTEGER DEFAULT 100000
+) RETURNS INTEGER AS $$
+DECLARE
+    total_records INTEGER;
+    processed_records INTEGER := 0;
+    current_batch INTEGER;
+    sql_query TEXT;
+BEGIN
+    -- Get total record count
+    sql_query := format('SELECT COUNT(*) FROM %%I.%%I', job_schema, records_table);
+    EXECUTE sql_query INTO total_records;
+    
+    -- Drop and recreate record_blocks table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.record_blocks', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.record_blocks (
+            gid INTEGER,
+            block_key TEXT,
+            PRIMARY KEY (gid, block_key)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Create blocking keys in batches
+    WHILE processed_records < total_records LOOP
+        current_batch := LEAST(batch_size, total_records - processed_records);
+        
+        sql_query := format('
+            INSERT INTO %%I.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '''') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '''') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '''') as block_key
+            FROM %%I.%%I 
+            WHERE gid > %%s AND gid <= %%s
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)',
+            job_schema, job_schema, records_table, processed_records, processed_records + current_batch);
+        
+        EXECUTE sql_query;
+        processed_records := processed_records + current_batch;
+        
+        RAISE NOTICE 'Processed %% of %% records (%%.1f%%%%)', 
+            processed_records, total_records, 
+            (processed_records::FLOAT / total_records * 100);
+    END LOOP;
+    
+    -- Create index for performance
+    sql_query := format('CREATE INDEX IF NOT EXISTS idx_record_blocks_key ON %%I.record_blocks(block_key)', job_schema);
+    EXECUTE sql_query;
+    
+    RETURN processed_records;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function for optimized record comparison with schema/table parameters
+CREATE OR REPLACE FUNCTION compare_records_optimized(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records',
+    min_gid_1 INTEGER DEFAULT 1,
+    max_gid_1 INTEGER DEFAULT 50,
+    min_gid_2 INTEGER DEFAULT 51,
+    max_gid_2 INTEGER DEFAULT 100,
+    max_block_size INTEGER DEFAULT 500,
+    batch_size INTEGER DEFAULT 100000
+) RETURNS INTEGER AS $$
+DECLARE
+    total_pairs INTEGER := 0;
+    sql_query TEXT;
+BEGIN
+    -- Drop and recreate processed_records table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.processed_records', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.processed_records (
+            gid_1 INTEGER,
+            gid_2 INTEGER,
+            fname_1 TEXT, lname_1 TEXT, byear_1 INTEGER, bmonth_1 INTEGER, bday_1 INTEGER,
+            fname_2 TEXT, lname_2 TEXT, byear_2 INTEGER, bmonth_2 INTEGER, bday_2 INTEGER,
+            PRIMARY KEY (gid_1, gid_2)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Insert record pairs using blocking
+    sql_query := format('
+        INSERT INTO %%I.processed_records 
+        SELECT DISTINCT
+            r1.gid as gid_1, r2.gid as gid_2,
+            r1.fname as fname_1, r1.lname as lname_1, r1.byear as byear_1, 
+            r1.bmonth as bmonth_1, r1.bday as bday_1,
+            r2.fname as fname_2, r2.lname as lname_2, r2.byear as byear_2,
+            r2.bmonth as bmonth_2, r2.bday as bday_2
+        FROM %%I.record_blocks b1
+        JOIN %%I.record_blocks b2 ON b1.block_key = b2.block_key
+        JOIN %%I.%%I r1 ON b1.gid = r1.gid
+        JOIN %%I.%%I r2 ON b2.gid = r2.gid
+        WHERE r1.gid >= %%s AND r1.gid <= %%s
+        AND r2.gid >= %%s AND r2.gid <= %%s
+        AND r1.gid < r2.gid
+        AND b1.block_key IN (
+            SELECT block_key 
+            FROM %%I.record_blocks 
+            GROUP BY block_key 
+            HAVING COUNT(*) <= %%s
+        )',
+        job_schema, job_schema, job_schema, job_schema, records_table, 
+        job_schema, records_table, min_gid_1, max_gid_1, min_gid_2, max_gid_2,
+        job_schema, max_block_size);
+    
+    EXECUTE sql_query;
+    
+    -- Get count of inserted pairs
+    sql_query := format('SELECT COUNT(*) FROM %%I.processed_records', job_schema);
+    EXECUTE sql_query INTO total_pairs;
+    
+    RAISE NOTICE 'Generated %% record pairs', total_pairs;
+    RETURN total_pairs;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function for exhaustive record comparison with schema/table parameters
+CREATE OR REPLACE FUNCTION compare_records_exhaustive(
+    job_schema TEXT DEFAULT 'public',
+    records_table TEXT DEFAULT 'records'
+) RETURNS INTEGER AS $$
+DECLARE
+    total_pairs INTEGER := 0;
+    sql_query TEXT;
+BEGIN
+    -- Drop and recreate processed_records table in the same schema
+    sql_query := format('DROP TABLE IF EXISTS %%I.processed_records', job_schema);
+    EXECUTE sql_query;
+    
+    sql_query := format('
+        CREATE TABLE %%I.processed_records (
+            gid_1 INTEGER,
+            gid_2 INTEGER,
+            fname_1 TEXT, lname_1 TEXT, byear_1 INTEGER, bmonth_1 INTEGER, bday_1 INTEGER,
+            fname_2 TEXT, lname_2 TEXT, byear_2 INTEGER, bmonth_2 INTEGER, bday_2 INTEGER,
+            PRIMARY KEY (gid_1, gid_2)
+        )', job_schema);
+    EXECUTE sql_query;
+    
+    -- Insert all possible record pairs (exhaustive comparison)
+    sql_query := format('
+        INSERT INTO %%I.processed_records 
+        SELECT 
+            r1.gid as gid_1, r2.gid as gid_2,
+            r1.fname as fname_1, r1.lname as lname_1, r1.byear as byear_1, 
+            r1.bmonth as bmonth_1, r1.bday as bday_1,
+            r2.fname as fname_2, r2.lname as lname_2, r2.byear as byear_2,
+            r2.bmonth as bmonth_2, r2.bday as bday_2
+        FROM %%I.%%I r1
+        CROSS JOIN %%I.%%I r2
+        WHERE r1.gid < r2.gid',
+        job_schema, job_schema, records_table, job_schema, records_table);
+    
+    EXECUTE sql_query;
+    
+    -- Get count of inserted pairs
+    sql_query := format('SELECT COUNT(*) FROM %%I.processed_records', job_schema);
+    EXECUTE sql_query INTO total_pairs;
+    
+    RAISE NOTICE 'Generated %% record pairs (exhaustive)', total_pairs;
+    RETURN total_pairs;
+END;
+$$ LANGUAGE plpgsql;
+]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:04:10,592 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-03 14:04:10,592 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-03 14:04:10,597 - __main__ - INFO - Normalized column: last_name
+2025-09-03 14:04:10,600 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 14:04:10,604 - __main__ - INFO - Normalized column: address
+2025-09-03 14:04:10,607 - __main__ - INFO - Normalized column: city
+2025-09-03 14:04:10,611 - __main__ - INFO - Normalized column: state
+2025-09-03 14:04:10,646 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 14:04:10,646 - __main__ - INFO - Cleaned SSN column
+2025-09-03 14:04:10,648 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 14:04:10,648 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-03 14:04:10,868 - __main__ - INFO - Database setup completed
+2025-09-03 14:04:10,868 - __main__ - INFO - Created database engine for public.records
+2025-09-03 14:04:10,877 - __main__ - INFO - Dataset size: 2519 records
+2025-09-03 14:04:10,900 - __main__ - INFO - PostgreSQL functions initialized
+2025-09-03 14:04:10,900 - __main__ - INFO - Using optimized blocking strategy (dataset > 1000)
+2025-09-03 14:04:10,901 - __main__ - ERROR - Error in optimized comparison: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:04:10,901 - __main__ - ERROR - Error in compare function: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:04:10,902 - __main__ - ERROR - Error in main: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UndefinedFunction: function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 106, in main
+    compare(
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 54, in compare
+    _run_optimized_comparison(engine, job_schema, records_table, logger,
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 172, in _run_optimized_comparison
+    connection.execute(text(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1306, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 332, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1498, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1862, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2043, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedFunction) function create_blocking_keys(integer, unknown, unknown) does not exist
+LINE 1: SELECT create_blocking_keys(100000, 'public', 'records')
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT create_blocking_keys(%(batch_size)s, %(job_schema)s, %(records_table)s)]
+[parameters: {'batch_size': 100000, 'job_schema': 'public', 'records_table': 'records'}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:07:34,582 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-03 14:07:34,582 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-03 14:07:34,587 - __main__ - INFO - Normalized column: last_name
+2025-09-03 14:07:34,590 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 14:07:34,595 - __main__ - INFO - Normalized column: address
+2025-09-03 14:07:34,598 - __main__ - INFO - Normalized column: city
+2025-09-03 14:07:34,602 - __main__ - INFO - Normalized column: state
+2025-09-03 14:07:34,639 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 14:07:34,639 - __main__ - INFO - Cleaned SSN column
+2025-09-03 14:07:34,640 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 14:07:34,640 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-03 14:07:34,868 - __main__ - INFO - Database setup completed
+2025-09-03 14:07:34,868 - __main__ - INFO - Created database engine for public.records
+2025-09-03 14:07:34,879 - __main__ - INFO - Dataset size: 2519 records
+2025-09-03 14:07:34,891 - __main__ - INFO - PostgreSQL functions initialized
+2025-09-03 14:07:34,892 - __main__ - INFO - Using optimized blocking strategy (dataset > 1000)
+2025-09-03 14:07:34,899 - __main__ - ERROR - Error in optimized comparison: (psycopg2.errors.UndefinedColumn) column "gid" does not exist
+LINE 3:             SELECT gid, 
+                           ^
+DETAIL:  There is a column named "gid" in table "record_blocks", but it cannot be referenced from this part of the query.
+QUERY:  
+            INSERT INTO public.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '') as block_key
+            FROM public.records 
+            WHERE gid > 0 AND gid <= 2519
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)
+CONTEXT:  PL/pgSQL function create_blocking_keys(text,text,integer) line 39 at EXECUTE
+
+[SQL: SELECT create_blocking_keys(%(job_schema)s, %(records_table)s, %(batch_size)s)]
+[parameters: {'job_schema': 'public', 'records_table': 'records', 'batch_size': 100000}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:07:34,899 - __main__ - ERROR - Error in compare function: (psycopg2.errors.UndefinedColumn) column "gid" does not exist
+LINE 3:             SELECT gid, 
+                           ^
+DETAIL:  There is a column named "gid" in table "record_blocks", but it cannot be referenced from this part of the query.
+QUERY:  
+            INSERT INTO public.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '') as block_key
+            FROM public.records 
+            WHERE gid > 0 AND gid <= 2519
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)
+CONTEXT:  PL/pgSQL function create_blocking_keys(text,text,integer) line 39 at EXECUTE
+
+[SQL: SELECT create_blocking_keys(%(job_schema)s, %(records_table)s, %(batch_size)s)]
+[parameters: {'job_schema': 'public', 'records_table': 'records', 'batch_size': 100000}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 14:07:34,899 - __main__ - ERROR - Error in main: (psycopg2.errors.UndefinedColumn) column "gid" does not exist
+LINE 3:             SELECT gid, 
+                           ^
+DETAIL:  There is a column named "gid" in table "record_blocks", but it cannot be referenced from this part of the query.
+QUERY:  
+            INSERT INTO public.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '') as block_key
+            FROM public.records 
+            WHERE gid > 0 AND gid <= 2519
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)
+CONTEXT:  PL/pgSQL function create_blocking_keys(text,text,integer) line 39 at EXECUTE
+
+[SQL: SELECT create_blocking_keys(%(job_schema)s, %(records_table)s, %(batch_size)s)]
+[parameters: {'job_schema': 'public', 'records_table': 'records', 'batch_size': 100000}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UndefinedColumn: column "gid" does not exist
+LINE 3:             SELECT gid, 
+                           ^
+DETAIL:  There is a column named "gid" in table "record_blocks", but it cannot be referenced from this part of the query.
+QUERY:  
+            INSERT INTO public.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '') as block_key
+            FROM public.records 
+            WHERE gid > 0 AND gid <= 2519
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)
+CONTEXT:  PL/pgSQL function create_blocking_keys(text,text,integer) line 39 at EXECUTE
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/main.py", line 106, in main
+    compare(
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 54, in compare
+    _run_optimized_comparison(engine, job_schema, records_table, logger,
+  File "/Users/abhinavpundir/Downloads/family-linkage-fix/training_pipeline/../family_linkage_models/prediction.py", line 172, in _run_optimized_comparison
+    connection.execute(text(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1306, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 332, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1498, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1862, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2043, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/abhinavpundir/Downloads/AnaConda/anaconda3/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column "gid" does not exist
+LINE 3:             SELECT gid, 
+                           ^
+DETAIL:  There is a column named "gid" in table "record_blocks", but it cannot be referenced from this part of the query.
+QUERY:  
+            INSERT INTO public.record_blocks (gid, block_key)
+            SELECT gid, 
+                   COALESCE(SUBSTRING(fname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(lname, 1, 2), '') || 
+                   COALESCE(SUBSTRING(CAST(byear AS TEXT), 3, 2), '') as block_key
+            FROM public.records 
+            WHERE gid > 0 AND gid <= 2519
+            AND (fname IS NOT NULL OR lname IS NOT NULL OR byear IS NOT NULL)
+CONTEXT:  PL/pgSQL function create_blocking_keys(text,text,integer) line 39 at EXECUTE
+
+[SQL: SELECT create_blocking_keys(%(job_schema)s, %(records_table)s, %(batch_size)s)]
+[parameters: {'job_schema': 'public', 'records_table': 'records', 'batch_size': 100000}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+2025-09-03 20:00:58,296 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-03 20:00:58,296 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-03 20:00:58,301 - __main__ - INFO - Normalized column: last_name
+2025-09-03 20:00:58,304 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 20:00:58,309 - __main__ - INFO - Normalized column: address
+2025-09-03 20:00:58,312 - __main__ - INFO - Normalized column: city
+2025-09-03 20:00:58,315 - __main__ - INFO - Normalized column: state
+2025-09-03 20:00:58,350 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 20:00:58,350 - __main__ - INFO - Cleaned SSN column
+2025-09-03 20:00:58,351 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 20:00:58,351 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-03 20:00:59,195 - __main__ - INFO - Database setup completed
+2025-09-03 20:00:59,195 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-03 20:00:59,209 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-03 20:00:59,209 - __main__ - INFO - Dataset size: 2519 records
+2025-09-03 20:00:59,209 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-03 20:00:59,440 - __main__ - INFO - Cleaned up existing tables
+2025-09-03 20:00:59,441 - __main__ - INFO - Progress 30%: Using exhaustive comparison
+2025-09-03 20:00:59,441 - __main__ - INFO - Using parallel exhaustive comparison (dataset <= 10000)
+2025-09-03 20:00:59,441 - __main__ - INFO - Running parallel exhaustive comparison...
+2025-09-03 20:04:14,158 - __main__ - INFO - Merging exhaustive comparison results...
+2025-09-03 20:05:24,940 - __main__ - INFO - Merged 3171421 unique record pairs
+2025-09-03 20:05:24,943 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-03 20:05:25,031 - __main__ - INFO - Progress 100%: Generated 3171421 record pairs
+2025-09-03 20:05:25,032 - __main__ - INFO - Comparison complete: 3171421 record pairs generated
+2025-09-03 20:09:03,555 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-03 20:09:03,555 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-03 20:09:03,559 - __main__ - INFO - Normalized column: last_name
+2025-09-03 20:09:03,562 - __main__ - INFO - Normalized column: middle_name
+2025-09-03 20:09:03,567 - __main__ - INFO - Normalized column: address
+2025-09-03 20:09:03,570 - __main__ - INFO - Normalized column: city
+2025-09-03 20:09:03,573 - __main__ - INFO - Normalized column: state
+2025-09-03 20:09:03,606 - __main__ - INFO - Converted DOB to datetime
+2025-09-03 20:09:03,607 - __main__ - INFO - Cleaned SSN column
+2025-09-03 20:09:03,608 - __main__ - INFO - Removed 0 placeholder records
+2025-09-03 20:09:03,608 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-03 20:09:03,953 - __main__ - INFO - Database setup completed
+2025-09-03 20:09:03,954 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-03 20:09:03,962 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-03 20:09:03,962 - __main__ - INFO - Dataset size: 2519 records
+2025-09-03 20:09:03,962 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-03 20:09:06,616 - __main__ - INFO - Cleaned up existing tables
+2025-09-03 20:09:06,617 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-03 20:09:06,617 - __main__ - INFO - Using optimized blocking strategy (dataset > 100)
+2025-09-03 20:09:06,617 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-03 20:09:07,893 - __main__ - INFO - Merging blocking tables...
+2025-09-03 20:09:07,943 - __main__ - INFO - Merged to 7557 blocking entries with 4931 unique blocks
+2025-09-03 20:09:07,943 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-03 20:09:09,461 - __main__ - INFO - Merging comparison results...
+2025-09-03 20:09:09,503 - __main__ - INFO - Merged 3661 unique record pairs
+2025-09-03 20:09:09,503 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-03 20:09:09,504 - __main__ - INFO - Progress 100%: Generated 3661 record pairs
+2025-09-03 20:09:09,504 - __main__ - INFO - Comparison complete: 3661 record pairs generated
+2025-09-04 00:05:59,642 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-04 00:05:59,645 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 00:05:59,653 - __main__ - INFO - Normalized column: last_name
+2025-09-04 00:05:59,656 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 00:05:59,661 - __main__ - INFO - Normalized column: address
+2025-09-04 00:05:59,664 - __main__ - INFO - Normalized column: city
+2025-09-04 00:05:59,667 - __main__ - INFO - Normalized column: state
+2025-09-04 00:05:59,702 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 00:05:59,702 - __main__ - INFO - Cleaned SSN column
+2025-09-04 00:05:59,704 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 00:05:59,704 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 00:06:00,328 - __main__ - INFO - Database setup completed
+2025-09-04 00:06:00,328 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 00:06:00,356 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 00:06:00,356 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 00:06:00,356 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 00:06:00,380 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 00:06:00,380 - __main__ - INFO - Progress 30%: Using exhaustive comparison
+2025-09-04 00:06:00,380 - __main__ - INFO - Using parallel exhaustive comparison (dataset <= 10000)
+2025-09-04 00:06:00,380 - __main__ - INFO - Running parallel exhaustive comparison...
+2025-09-04 00:09:09,880 - __main__ - INFO - Merging exhaustive comparison results...
+2025-09-04 00:10:26,145 - __main__ - INFO - Merged 3171421 unique record pairs
+2025-09-04 00:10:26,148 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 00:10:26,236 - __main__ - INFO - Progress 100%: Generated 3171421 record pairs
+2025-09-04 00:10:26,236 - __main__ - INFO - Comparison complete: 3171421 record pairs generated
+2025-09-04 00:14:15,440 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-04 00:14:15,441 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 00:14:15,449 - __main__ - INFO - Normalized column: last_name
+2025-09-04 00:14:15,452 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 00:14:15,457 - __main__ - INFO - Normalized column: address
+2025-09-04 00:14:15,461 - __main__ - INFO - Normalized column: city
+2025-09-04 00:14:15,464 - __main__ - INFO - Normalized column: state
+2025-09-04 00:14:15,500 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 00:14:15,500 - __main__ - INFO - Cleaned SSN column
+2025-09-04 00:14:15,501 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 00:14:15,501 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 00:14:15,887 - __main__ - INFO - Database setup completed
+2025-09-04 00:14:15,887 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 00:14:15,899 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 00:14:15,899 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 00:14:15,899 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 00:14:20,307 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 00:14:20,307 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-04 00:14:20,307 - __main__ - INFO - Using optimized blocking strategy (dataset > 100)
+2025-09-04 00:14:20,307 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-04 00:14:21,791 - __main__ - INFO - Merging blocking tables...
+2025-09-04 00:14:21,925 - __main__ - INFO - Merged to 7557 blocking entries with 4923 unique blocks
+2025-09-04 00:14:21,925 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-04 00:14:23,553 - __main__ - INFO - Merging comparison results...
+2025-09-04 00:14:23,593 - __main__ - INFO - Merged 3668 unique record pairs
+2025-09-04 00:14:23,594 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 00:14:23,594 - __main__ - INFO - Progress 100%: Generated 3668 record pairs
+2025-09-04 00:14:23,594 - __main__ - INFO - Comparison complete: 3668 record pairs generated
+2025-09-04 00:22:43,183 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-04 00:22:43,183 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 00:22:43,192 - __main__ - INFO - Normalized column: last_name
+2025-09-04 00:22:43,195 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 00:22:43,200 - __main__ - INFO - Normalized column: address
+2025-09-04 00:22:43,203 - __main__ - INFO - Normalized column: city
+2025-09-04 00:22:43,206 - __main__ - INFO - Normalized column: state
+2025-09-04 00:22:43,242 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 00:22:43,242 - __main__ - INFO - Cleaned SSN column
+2025-09-04 00:22:43,244 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 00:22:43,244 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 00:22:43,596 - __main__ - INFO - Database setup completed
+2025-09-04 00:22:43,596 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 00:22:43,605 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 00:22:43,605 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 00:22:43,605 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 00:22:43,623 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 00:22:43,623 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-04 00:22:43,623 - __main__ - INFO - Using optimized blocking strategy (dataset > 100)
+2025-09-04 00:22:43,623 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-04 00:22:44,906 - __main__ - INFO - Merging blocking tables...
+2025-09-04 00:22:44,960 - __main__ - INFO - Merged to 7557 blocking entries with 4923 unique blocks
+2025-09-04 00:22:44,960 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-04 00:22:46,566 - __main__ - INFO - Merging comparison results...
+2025-09-04 00:22:46,606 - __main__ - INFO - Merged 3668 unique record pairs
+2025-09-04 00:22:46,606 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 00:22:46,607 - __main__ - INFO - Progress 100%: Generated 3668 record pairs
+2025-09-04 00:22:46,607 - __main__ - INFO - Comparison complete: 3668 record pairs generated
+2025-09-04 00:22:48,134 - __main__ - INFO - Class distribution:
+relationship
+0    3399
+1     728
+Name: count, dtype: int64
+2025-09-04 00:22:48,136 - __main__ - INFO - Training set: 2888 rows, Test set: 1239 rows
+2025-09-04 00:22:48,136 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 4, 'min_samples_leaf': 2, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 00:22:48,439 - __main__ - INFO - Training completed in 0.30 seconds
+2025-09-04 00:22:48,456 - __main__ - INFO - Feature importance:
+age_diff                  0.445512
+edit_dist_ln              0.110703
+edit_dist_city            0.105330
+edit_dist_phone_num       0.068164
+edit_dist_mail_address    0.064069
+edit_dist_mn              0.048875
+record2_agecategory       0.045567
+record1_agecategory       0.042722
+edit_dist_zip             0.027013
+sex_diff                  0.012006
+record2_sex               0.011343
+record1_sex               0.010430
+state_match               0.008267
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 00:22:48,820 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_sibling.png
+2025-09-04 00:22:48,959 - __main__ - INFO - Accuracy: 0.9257
+2025-09-04 00:22:48,961 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.94      0.97      0.96      1020
+           1       0.83      0.73      0.78       219
+
+    accuracy                           0.93      1239
+   macro avg       0.89      0.85      0.87      1239
+weighted avg       0.92      0.93      0.92      1239
+
+2025-09-04 00:22:49,006 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_sibling.png
+2025-09-04 00:22:49,088 - __main__ - INFO - ROC-AUC Score: 0.9772
+2025-09-04 00:22:49,131 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_sibling.png
+2025-09-04 00:22:49,244 - __main__ - INFO - Model saved to data/models/rf_sibling_model.pkl
+2025-09-04 00:23:06,153 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-04 00:23:06,153 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 00:23:06,161 - __main__ - INFO - Normalized column: last_name
+2025-09-04 00:23:06,164 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 00:23:06,169 - __main__ - INFO - Normalized column: address
+2025-09-04 00:23:06,172 - __main__ - INFO - Normalized column: city
+2025-09-04 00:23:06,176 - __main__ - INFO - Normalized column: state
+2025-09-04 00:23:06,210 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 00:23:06,211 - __main__ - INFO - Cleaned SSN column
+2025-09-04 00:23:06,212 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 00:23:06,212 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 00:23:06,426 - __main__ - INFO - Database setup completed
+2025-09-04 00:23:06,427 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 00:23:06,435 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 00:23:06,435 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 00:23:06,435 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 00:23:06,444 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 00:23:06,444 - __main__ - INFO - Progress 30%: Using exhaustive comparison
+2025-09-04 00:23:06,444 - __main__ - INFO - Using parallel exhaustive comparison (dataset <= 10000)
+2025-09-04 00:23:06,444 - __main__ - INFO - Running parallel exhaustive comparison...
+2025-09-04 00:26:25,732 - __main__ - INFO - Merging exhaustive comparison results...
+2025-09-04 00:27:21,465 - __main__ - INFO - Merged 3171421 unique record pairs
+2025-09-04 00:27:21,470 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 00:27:21,545 - __main__ - INFO - Progress 100%: Generated 3171421 record pairs
+2025-09-04 00:27:21,545 - __main__ - INFO - Comparison complete: 3171421 record pairs generated
+2025-09-04 00:27:43,082 - __main__ - INFO - Class distribution:
+relationship
+0    3171057
+1        728
+Name: count, dtype: int64
+2025-09-04 00:27:43,910 - __main__ - INFO - Training set: 2220249 rows, Test set: 951536 rows
+2025-09-04 00:27:43,910 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 4, 'min_samples_leaf': 2, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 00:30:27,573 - __main__ - INFO - Training completed in 163.66 seconds
+2025-09-04 00:30:27,606 - __main__ - INFO - Feature importance:
+age_diff                  0.352005
+edit_dist_ln              0.138305
+edit_dist_city            0.127047
+edit_dist_mail_address    0.089438
+edit_dist_phone_num       0.066406
+record1_agecategory       0.049645
+edit_dist_mn              0.049027
+record2_agecategory       0.045848
+edit_dist_zip             0.041914
+sex_diff                  0.014905
+record2_sex               0.010443
+record1_sex               0.009828
+state_match               0.005188
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 00:30:28,357 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_sibling.png
+2025-09-04 00:30:31,146 - __main__ - INFO - Accuracy: 0.9999
+2025-09-04 00:30:31,738 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    951318
+           1       0.80      0.60      0.69       218
+
+    accuracy                           1.00    951536
+   macro avg       0.90      0.80      0.84    951536
+weighted avg       1.00      1.00      1.00    951536
+
+2025-09-04 00:30:31,845 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_sibling.png
+2025-09-04 00:30:34,568 - __main__ - INFO - ROC-AUC Score: 0.9949
+2025-09-04 00:30:34,664 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_sibling.png
+2025-09-04 00:30:34,784 - __main__ - INFO - Model saved to data/models/rf_sibling_model.pkl
+2025-09-04 00:52:47,963 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-04 00:52:47,964 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 00:52:47,971 - __main__ - INFO - Normalized column: last_name
+2025-09-04 00:52:47,974 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 00:52:47,979 - __main__ - INFO - Normalized column: address
+2025-09-04 00:52:47,982 - __main__ - INFO - Normalized column: city
+2025-09-04 00:52:47,985 - __main__ - INFO - Normalized column: state
+2025-09-04 00:52:48,020 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 00:52:48,020 - __main__ - INFO - Cleaned SSN column
+2025-09-04 00:52:48,021 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 00:52:48,021 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 00:52:48,321 - __main__ - INFO - Database setup completed
+2025-09-04 00:52:48,321 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 00:52:48,331 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 00:52:48,331 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 00:52:48,331 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 00:52:48,344 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 00:52:48,344 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-04 00:52:48,344 - __main__ - INFO - Using optimized blocking strategy (dataset > 100)
+2025-09-04 00:52:48,344 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-04 00:52:49,729 - __main__ - INFO - Merging blocking tables...
+2025-09-04 00:52:49,782 - __main__ - INFO - Merged to 7557 blocking entries with 4923 unique blocks
+2025-09-04 00:52:49,782 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-04 00:52:51,340 - __main__ - INFO - Merging comparison results...
+2025-09-04 00:52:51,383 - __main__ - INFO - Merged 3668 unique record pairs
+2025-09-04 00:52:51,383 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 00:52:51,384 - __main__ - INFO - Progress 100%: Generated 3668 record pairs
+2025-09-04 00:52:51,384 - __main__ - INFO - Comparison complete: 3668 record pairs generated
+2025-09-04 00:52:52,632 - __main__ - INFO - Class distribution:
+relationship
+0    3399
+1     728
+Name: count, dtype: int64
+2025-09-04 00:52:52,634 - __main__ - INFO - Training set: 2888 rows, Test set: 1239 rows
+2025-09-04 00:52:52,634 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 4, 'min_samples_leaf': 2, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 00:52:52,940 - __main__ - INFO - Training completed in 0.31 seconds
+2025-09-04 00:52:52,957 - __main__ - INFO - Feature importance:
+age_diff                  0.437968
+edit_dist_ln              0.115721
+edit_dist_city            0.105611
+edit_dist_phone_num       0.068175
+edit_dist_mail_address    0.065240
+edit_dist_mn              0.048310
+record1_agecategory       0.045981
+record2_agecategory       0.044394
+edit_dist_zip             0.026384
+sex_diff                  0.011734
+record2_sex               0.011531
+record1_sex               0.010424
+state_match               0.008526
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 00:52:53,169 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_sibling.png
+2025-09-04 00:52:53,367 - __main__ - INFO - Accuracy: 0.9282
+2025-09-04 00:52:53,369 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.95      0.97      0.96      1020
+           1       0.84      0.74      0.78       219
+
+    accuracy                           0.93      1239
+   macro avg       0.89      0.85      0.87      1239
+weighted avg       0.93      0.93      0.93      1239
+
+2025-09-04 00:52:53,418 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_sibling.png
+2025-09-04 00:52:53,459 - __main__ - INFO - ROC-AUC Score: 0.9771
+2025-09-04 00:52:53,505 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_sibling.png
+2025-09-04 00:52:53,649 - __main__ - INFO - Model saved to data/models/rf_sibling_model.pkl
+2025-09-04 00:53:03,840 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-04 00:53:03,841 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 00:53:03,848 - __main__ - INFO - Normalized column: last_name
+2025-09-04 00:53:03,851 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 00:53:03,856 - __main__ - INFO - Normalized column: address
+2025-09-04 00:53:03,859 - __main__ - INFO - Normalized column: city
+2025-09-04 00:53:03,863 - __main__ - INFO - Normalized column: state
+2025-09-04 00:53:03,896 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 00:53:03,896 - __main__ - INFO - Cleaned SSN column
+2025-09-04 00:53:03,897 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 00:53:03,897 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 00:53:04,045 - __main__ - INFO - Database setup completed
+2025-09-04 00:53:04,045 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 00:53:04,051 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 00:53:04,051 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 00:53:04,051 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 00:53:04,056 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 00:53:04,056 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-04 00:53:04,056 - __main__ - INFO - Using optimized blocking strategy (dataset > 1000)
+2025-09-04 00:53:04,056 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-04 00:53:05,339 - __main__ - INFO - Merging blocking tables...
+2025-09-04 00:53:05,397 - __main__ - INFO - Merged to 7557 blocking entries with 4923 unique blocks
+2025-09-04 00:53:05,397 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-04 00:53:06,942 - __main__ - INFO - Merging comparison results...
+2025-09-04 00:53:06,982 - __main__ - INFO - Merged 3668 unique record pairs
+2025-09-04 00:53:06,982 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 00:53:06,983 - __main__ - INFO - Progress 100%: Generated 3668 record pairs
+2025-09-04 00:53:06,983 - __main__ - INFO - Comparison complete: 3668 record pairs generated
+2025-09-04 00:53:08,128 - __main__ - INFO - Class distribution:
+relationship
+0    3399
+1     728
+Name: count, dtype: int64
+2025-09-04 00:53:08,130 - __main__ - INFO - Training set: 2888 rows, Test set: 1239 rows
+2025-09-04 00:53:08,130 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 4, 'min_samples_leaf': 2, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 00:53:08,433 - __main__ - INFO - Training completed in 0.30 seconds
+2025-09-04 00:53:08,450 - __main__ - INFO - Feature importance:
+age_diff                  0.439179
+edit_dist_ln              0.115015
+edit_dist_city            0.105019
+edit_dist_phone_num       0.068020
+edit_dist_mail_address    0.065004
+edit_dist_mn              0.049141
+record1_agecategory       0.047547
+record2_agecategory       0.044178
+edit_dist_zip             0.025040
+sex_diff                  0.012008
+record2_sex               0.011296
+record1_sex               0.010098
+state_match               0.008454
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 00:53:08,646 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_sibling.png
+2025-09-04 00:53:08,750 - __main__ - INFO - Accuracy: 0.9282
+2025-09-04 00:53:08,752 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.95      0.97      0.96      1020
+           1       0.83      0.74      0.79       219
+
+    accuracy                           0.93      1239
+   macro avg       0.89      0.86      0.87      1239
+weighted avg       0.93      0.93      0.93      1239
+
+2025-09-04 00:53:08,793 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_sibling.png
+2025-09-04 00:53:08,865 - __main__ - INFO - ROC-AUC Score: 0.9775
+2025-09-04 00:53:08,908 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_sibling.png
+2025-09-04 00:53:08,998 - __main__ - INFO - Model saved to data/models/rf_sibling_model.pkl
+2025-09-04 00:53:16,940 - __main__ - INFO - Read 2519 records and 728 labels
+2025-09-04 00:53:16,940 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 00:53:16,947 - __main__ - INFO - Normalized column: last_name
+2025-09-04 00:53:16,950 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 00:53:16,955 - __main__ - INFO - Normalized column: address
+2025-09-04 00:53:16,958 - __main__ - INFO - Normalized column: city
+2025-09-04 00:53:16,961 - __main__ - INFO - Normalized column: state
+2025-09-04 00:53:16,994 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 00:53:16,995 - __main__ - INFO - Cleaned SSN column
+2025-09-04 00:53:16,996 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 00:53:16,996 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 00:53:17,132 - __main__ - INFO - Database setup completed
+2025-09-04 00:53:17,132 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 00:53:17,138 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 00:53:17,138 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 00:53:17,138 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 00:53:17,144 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 00:53:17,144 - __main__ - INFO - Progress 30%: Using exhaustive comparison
+2025-09-04 00:53:17,144 - __main__ - INFO - Using parallel exhaustive comparison (dataset <= 10000)
+2025-09-04 00:53:17,144 - __main__ - INFO - Running parallel exhaustive comparison...
+2025-09-04 00:58:31,470 - __main__ - INFO - Merging exhaustive comparison results...
+2025-09-04 00:59:36,661 - __main__ - INFO - Merged 3171421 unique record pairs
+2025-09-04 00:59:36,663 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 00:59:36,760 - __main__ - INFO - Progress 100%: Generated 3171421 record pairs
+2025-09-04 00:59:36,760 - __main__ - INFO - Comparison complete: 3171421 record pairs generated
+2025-09-04 00:59:56,776 - __main__ - INFO - Class distribution:
+relationship
+0    3171057
+1        728
+Name: count, dtype: int64
+2025-09-04 00:59:57,619 - __main__ - INFO - Training set: 2220249 rows, Test set: 951536 rows
+2025-09-04 00:59:57,619 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 4, 'min_samples_leaf': 2, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 01:02:39,231 - __main__ - INFO - Training completed in 161.61 seconds
+2025-09-04 01:02:39,271 - __main__ - INFO - Feature importance:
+age_diff                  0.353164
+edit_dist_ln              0.143130
+edit_dist_city            0.127083
+edit_dist_mail_address    0.090351
+edit_dist_phone_num       0.063751
+edit_dist_mn              0.049092
+record2_agecategory       0.045994
+record1_agecategory       0.044849
+edit_dist_zip             0.043752
+sex_diff                  0.014443
+record2_sex               0.010364
+record1_sex               0.009462
+state_match               0.004564
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 01:02:39,956 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_sibling.png
+2025-09-04 01:02:43,027 - __main__ - INFO - Accuracy: 0.9999
+2025-09-04 01:02:43,624 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    951318
+           1       0.80      0.59      0.68       218
+
+    accuracy                           1.00    951536
+   macro avg       0.90      0.79      0.84    951536
+weighted avg       1.00      1.00      1.00    951536
+
+2025-09-04 01:02:43,733 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_sibling.png
+2025-09-04 01:02:46,573 - __main__ - INFO - ROC-AUC Score: 0.9928
+2025-09-04 01:02:46,671 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_sibling.png
+2025-09-04 01:02:46,790 - __main__ - INFO - Model saved to data/models/rf_sibling_model.pkl
+2025-09-04 02:54:43,010 - __main__ - INFO - Read 2519 records and 772 labels
+2025-09-04 02:54:43,014 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 02:54:43,021 - __main__ - INFO - Normalized column: last_name
+2025-09-04 02:54:43,024 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 02:54:43,029 - __main__ - INFO - Normalized column: address
+2025-09-04 02:54:43,032 - __main__ - INFO - Normalized column: city
+2025-09-04 02:54:43,035 - __main__ - INFO - Normalized column: state
+2025-09-04 02:54:43,070 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 02:54:43,070 - __main__ - INFO - Cleaned SSN column
+2025-09-04 02:54:43,071 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 02:54:43,071 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 02:54:43,231 - __main__ - INFO - Database setup completed
+2025-09-04 02:54:43,231 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 02:54:43,238 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 02:54:43,238 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 02:54:43,238 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 02:54:43,246 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 02:54:43,246 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-04 02:54:43,246 - __main__ - INFO - Using optimized blocking strategy (dataset > 100)
+2025-09-04 02:54:43,246 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-04 02:54:44,529 - __main__ - INFO - Merging blocking tables...
+2025-09-04 02:54:44,594 - __main__ - INFO - Merged to 7557 blocking entries with 4923 unique blocks
+2025-09-04 02:54:44,594 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-04 02:54:46,198 - __main__ - INFO - Merging comparison results...
+2025-09-04 02:54:46,262 - __main__ - INFO - Merged 3668 unique record pairs
+2025-09-04 02:54:46,262 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 02:54:46,263 - __main__ - INFO - Progress 100%: Generated 3668 record pairs
+2025-09-04 02:54:46,263 - __main__ - INFO - Comparison complete: 3668 record pairs generated
+2025-09-04 02:54:47,617 - __main__ - INFO - Class distribution:
+relationship
+0    3489
+1     772
+Name: count, dtype: int64
+2025-09-04 02:54:47,619 - __main__ - INFO - Training set: 2982 rows, Test set: 1279 rows
+2025-09-04 02:54:47,619 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 6, 'min_samples_leaf': 5, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 02:54:47,927 - __main__ - INFO - Training completed in 0.31 seconds
+2025-09-04 02:54:47,943 - __main__ - INFO - Feature importance:
+edit_dist_city            0.337681
+age_diff                  0.285214
+edit_dist_mail_address    0.080014
+edit_dist_zip             0.074027
+edit_dist_ln              0.060213
+sex_diff                  0.050750
+state_match               0.036506
+edit_dist_phone_num       0.021248
+edit_dist_mn              0.020418
+record2_agecategory       0.013625
+record1_agecategory       0.012866
+record1_sex               0.003795
+record2_sex               0.003643
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 02:54:48,211 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_partner.png
+2025-09-04 02:54:48,291 - __main__ - INFO - Accuracy: 0.9531
+2025-09-04 02:54:48,294 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.95      1.00      0.97      1047
+           1       0.97      0.76      0.86       232
+
+    accuracy                           0.95      1279
+   macro avg       0.96      0.88      0.91      1279
+weighted avg       0.95      0.95      0.95      1279
+
+2025-09-04 02:54:48,372 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_partner.png
+2025-09-04 02:54:48,434 - __main__ - INFO - ROC-AUC Score: 0.9870
+2025-09-04 02:54:48,479 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_partner.png
+2025-09-04 02:54:48,598 - __main__ - INFO - Model saved to data/models/rf_partner_model.pkl
+2025-09-04 02:55:17,175 - __main__ - INFO - Read 2519 records and 772 labels
+2025-09-04 02:55:17,176 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 02:55:17,183 - __main__ - INFO - Normalized column: last_name
+2025-09-04 02:55:17,186 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 02:55:17,191 - __main__ - INFO - Normalized column: address
+2025-09-04 02:55:17,195 - __main__ - INFO - Normalized column: city
+2025-09-04 02:55:17,198 - __main__ - INFO - Normalized column: state
+2025-09-04 02:55:17,233 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 02:55:17,234 - __main__ - INFO - Cleaned SSN column
+2025-09-04 02:55:17,236 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 02:55:17,236 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 02:55:17,479 - __main__ - INFO - Database setup completed
+2025-09-04 02:55:17,480 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 02:55:17,489 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 02:55:17,489 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 02:55:17,489 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 02:55:17,503 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 02:55:17,503 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-04 02:55:17,503 - __main__ - INFO - Using optimized blocking strategy (dataset > 100)
+2025-09-04 02:55:17,503 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-04 02:55:18,797 - __main__ - INFO - Merging blocking tables...
+2025-09-04 02:55:18,853 - __main__ - INFO - Merged to 7557 blocking entries with 4923 unique blocks
+2025-09-04 02:55:18,853 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-04 02:55:20,435 - __main__ - INFO - Merging comparison results...
+2025-09-04 02:55:20,501 - __main__ - INFO - Merged 3668 unique record pairs
+2025-09-04 02:55:20,501 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 02:55:20,502 - __main__ - INFO - Progress 100%: Generated 3668 record pairs
+2025-09-04 02:55:20,502 - __main__ - INFO - Comparison complete: 3668 record pairs generated
+2025-09-04 02:55:21,774 - __main__ - INFO - Class distribution:
+relationship
+0    3489
+1     772
+Name: count, dtype: int64
+2025-09-04 02:55:21,778 - __main__ - INFO - Training set: 2982 rows, Test set: 1279 rows
+2025-09-04 02:55:21,778 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 6, 'min_samples_leaf': 5, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 02:55:22,094 - __main__ - INFO - Training completed in 0.32 seconds
+2025-09-04 02:55:22,109 - __main__ - INFO - Feature importance:
+edit_dist_city            0.319692
+age_diff                  0.291367
+edit_dist_zip             0.082082
+edit_dist_mail_address    0.078224
+edit_dist_ln              0.063411
+sex_diff                  0.054658
+state_match               0.035989
+edit_dist_phone_num       0.022015
+edit_dist_mn              0.019259
+record1_agecategory       0.013369
+record2_agecategory       0.012520
+record1_sex               0.003834
+record2_sex               0.003580
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 02:55:22,377 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_partner.png
+2025-09-04 02:55:22,478 - __main__ - INFO - Accuracy: 0.9523
+2025-09-04 02:55:22,481 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.95      0.99      0.97      1047
+           1       0.97      0.76      0.85       232
+
+    accuracy                           0.95      1279
+   macro avg       0.96      0.88      0.91      1279
+weighted avg       0.95      0.95      0.95      1279
+
+2025-09-04 02:55:22,523 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_partner.png
+2025-09-04 02:55:22,598 - __main__ - INFO - ROC-AUC Score: 0.9870
+2025-09-04 02:55:22,644 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_partner.png
+2025-09-04 02:55:22,769 - __main__ - INFO - Model saved to data/models/rf_partner_model.pkl
+2025-09-04 03:12:04,238 - __main__ - INFO - Read 2519 records and 772 labels
+2025-09-04 03:12:04,239 - __main__ - INFO - Starting normalization of 2519 records
+2025-09-04 03:12:04,245 - __main__ - INFO - Normalized column: last_name
+2025-09-04 03:12:04,249 - __main__ - INFO - Normalized column: middle_name
+2025-09-04 03:12:04,253 - __main__ - INFO - Normalized column: address
+2025-09-04 03:12:04,257 - __main__ - INFO - Normalized column: city
+2025-09-04 03:12:04,260 - __main__ - INFO - Normalized column: state
+2025-09-04 03:12:04,294 - __main__ - INFO - Converted DOB to datetime
+2025-09-04 03:12:04,294 - __main__ - INFO - Cleaned SSN column
+2025-09-04 03:12:04,295 - __main__ - INFO - Removed 0 placeholder records
+2025-09-04 03:12:04,295 - __main__ - INFO - Normalization complete: 2519 records remaining
+2025-09-04 03:12:04,450 - __main__ - INFO - Database setup completed
+2025-09-04 03:12:04,450 - __main__ - INFO - Progress 10%: Creating database connection
+2025-09-04 03:12:04,457 - __main__ - INFO - Progress 20%: Dataset loaded: 2519 records
+2025-09-04 03:12:04,457 - __main__ - INFO - Dataset size: 2519 records
+2025-09-04 03:12:04,457 - __main__ - INFO - Progress 25%: Cleaning up existing tables
+2025-09-04 03:12:04,463 - __main__ - INFO - Cleaned up existing tables
+2025-09-04 03:12:04,464 - __main__ - INFO - Progress 30%: Using optimized blocking strategy
+2025-09-04 03:12:04,464 - __main__ - INFO - Using optimized blocking strategy (dataset > 100)
+2025-09-04 03:12:04,464 - __main__ - INFO - Creating blocking keys in parallel...
+2025-09-04 03:12:05,793 - __main__ - INFO - Merging blocking tables...
+2025-09-04 03:12:05,851 - __main__ - INFO - Merged to 7557 blocking entries with 4923 unique blocks
+2025-09-04 03:12:05,851 - __main__ - INFO - Performing parallel optimized record comparison...
+2025-09-04 03:12:07,408 - __main__ - INFO - Merging comparison results...
+2025-09-04 03:12:07,459 - __main__ - INFO - Merged 3668 unique record pairs
+2025-09-04 03:12:07,459 - __main__ - INFO - Progress 90%: Comparison completed
+2025-09-04 03:12:07,459 - __main__ - INFO - Progress 100%: Generated 3668 record pairs
+2025-09-04 03:12:07,459 - __main__ - INFO - Comparison complete: 3668 record pairs generated
+2025-09-04 03:12:08,668 - __main__ - INFO - Class distribution:
+relationship
+0    3489
+1     772
+Name: count, dtype: int64
+2025-09-04 03:12:08,670 - __main__ - INFO - Training set: 2982 rows, Test set: 1279 rows
+2025-09-04 03:12:08,670 - __main__ - INFO - RandomForestClassifier initialized with hyperparameters: {'max_features': 6, 'min_samples_leaf': 5, 'n_estimators': 500, 'n_jobs': -1}
+2025-09-04 03:12:08,985 - __main__ - INFO - Training completed in 0.32 seconds
+2025-09-04 03:12:09,034 - __main__ - INFO - Feature importance:
+edit_dist_city            0.335694
+age_diff                  0.279931
+edit_dist_zip             0.082125
+edit_dist_mail_address    0.079213
+edit_dist_ln              0.063880
+sex_diff                  0.051603
+state_match               0.028719
+edit_dist_phone_num       0.022986
+edit_dist_mn              0.020631
+record2_agecategory       0.014292
+record1_agecategory       0.013500
+record1_sex               0.003793
+record2_sex               0.003634
+ssn_match                 0.000000
+dtype: float64
+2025-09-04 03:12:09,409 - __main__ - INFO - Feature importance plot saved to data/plots/feature_importance_partner.png
+2025-09-04 03:12:09,522 - __main__ - INFO - Accuracy: 0.9547
+2025-09-04 03:12:09,524 - __main__ - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.95      1.00      0.97      1047
+           1       0.97      0.77      0.86       232
+
+    accuracy                           0.95      1279
+   macro avg       0.96      0.88      0.92      1279
+weighted avg       0.96      0.95      0.95      1279
+
+2025-09-04 03:12:09,570 - __main__ - INFO - Confusion matrix plot saved to data/plots/confusion_matrix_partner.png
+2025-09-04 03:12:09,634 - __main__ - INFO - ROC-AUC Score: 0.9875
+2025-09-04 03:12:09,677 - __main__ - INFO - ROC curve plot saved to data/plots/roc_curve_partner.png
+2025-09-04 03:12:09,822 - __main__ - INFO - Model saved to data/models/rf_partner_model.pkl
