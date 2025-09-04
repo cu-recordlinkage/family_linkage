@@ -51,7 +51,7 @@ family_linkage_project/
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Python 3.10
 - PostgreSQL database
 
 ### Install from Source
@@ -193,7 +193,7 @@ The system automatically selects processing strategy based on dataset size:
 
 ### Error Handling
 - Comprehensive logging at all stages
-- Graceful handling of missing data
+- Handling of missing data
 - Database connection pooling and retry logic
 - Progress tracking with elapsed time
 
