@@ -5,85 +5,121 @@ import unicodedata
 
 def normalize(dataframe, logger):
     try:
-        df = dataframe.copy()
-        logger.info(f"Starting normalization of {len(df)} records")
-        text_columns = ['last_name', 'middle_name', 'address', 'city', 'state']
+        logger.info(f"Starting normalization of {len(dataframe)} records")
         
-        for col in text_columns:
-            if col in df.columns:
-                if col == 'last_name':
-                    df[col] = df[col].apply(_clean_name_advanced)
-                else:
-                    df[col] = df[col].apply(_normalize_string_unified)
-                logger.info(f"Normalized column: {col}")
+        # Regular expressions used to filter out classes of characters
+        nonalpha = re.compile(r'[^A-Z]')
+        nonalphanumeric = re.compile(r'[^A-Z0-9]')
+        nonnumeric = re.compile(r'[^0-9]')
+        # Regular expressions used to filter out last_name prefixes and suffixes
+        prefix = re.compile(r'^(?:MC|MAC|DE|VAN|VON|LA|LE|DEL|DELLA|DI)')
+        suffix = re.compile(r'(?:JR|SR|II|III|IV|V|JUNIOR|SENIOR)$')
+
+        # Advanced last name cleaning with prefix/suffix removal
+        if 'last_name' in dataframe.columns:
+            dataframe['last_name'] = (dataframe['last_name']
+                .str.normalize('NFKD')
+                .str.upper()
+                .str.replace(nonalpha, '', regex=True)
+                .str.replace(prefix, '', regex=True)
+                .str.replace(suffix, '', regex=True))
+            logger.info("Normalized last_name column")
+
+        # Middle name normalization - truncate to first character
+        if 'middle_name' in dataframe.columns:
+            dataframe['middle_name'] = (dataframe['middle_name']
+                .str.normalize('NFKD')
+                .str.upper()
+                .str.replace(nonalpha, '', regex=True)
+                .str[0])  # Take only first character
+            logger.info("Normalized middle_name column")
+
+        # Sex normalization - convert to uppercase and truncate to one character
+        if 'sex' in dataframe.columns:
+            dataframe['sex'] = (dataframe['sex']
+                .str.upper()
+                .str[0])
+            logger.info("Normalized sex column")
+
+        # Address, city, state normalization
+        for column in ['address', 'city', 'state']:
+            if column in dataframe.columns:
+                dataframe[column] = (dataframe[column]
+                    .str.normalize('NFKD')
+                    .str.upper()
+                    .str.replace(nonalphanumeric, '', regex=True))
+                logger.info(f"Normalized {column} column")
+
+        # SSN and phone normalization - keep only numeric characters
+        for column in ['ssn', 'phone']:
+            if column in dataframe.columns:
+                dataframe[column] = (dataframe[column]
+                    .str.replace(nonnumeric, '', regex=True))
+                logger.info(f"Normalized {column} column")
+
+        # ZIP code normalization - keep only numeric characters
+        if 'zip' in dataframe.columns:
+            dataframe['zip'] = (dataframe['zip']
+                .str.replace(nonnumeric, '', regex=True))
+            logger.info("Normalized zip column")
+
+        if 'dob' in dataframe.columns:
+            dataframe['dob'] = pd.to_datetime(dataframe['dob'], errors='coerce').dt.strftime('%Y-%m-%d')
+            dataframe['dob'] = dataframe['dob'].replace('NaT', None)
+            logger.info("Normalized dob column (kept as text for CURL compatibility)")
+
+        # Convert all empty strings to None for consistent null handling
+        dataframe.replace('', None, inplace=True)
+
+        # Remove placeholder records
+        if 'last_name' in dataframe.columns:
+            initial_count = len(dataframe)
+            dataframe = dataframe[~dataframe['last_name'].isin(['BABY', 'INFANT', 'VOID', 'UNKNOWN'])]
+            removed_count = initial_count - len(dataframe)
+            if removed_count > 0:
+                logger.info(f"Removed {removed_count} placeholder records")
         
-        if 'dob' in df.columns:
-            df['dob'] = pd.to_datetime(df['dob'], errors='coerce')
-            logger.info("Converted DOB to datetime")
-        
-        if 'ssn' in df.columns:
-            df['ssn'] = df['ssn'].replace('--', np.nan)
-            logger.info("Cleaned SSN column")
-        
-        if 'last_name' in df.columns:
-            keywords = ['BABY', 'INFANT', 'VOID', 'UNKNOWN']
-            pattern = f"^({'|'.join(keywords)})"
-            placeholder_mask = df['last_name'].str.match(pattern, na=False)
-            df = df[~placeholder_mask]
-            logger.info(f"Removed {placeholder_mask.sum()} placeholder records")
-        
-        logger.info(f"Normalization complete: {len(df)} records remaining")
-        return df
+        logger.info(f"Normalization complete: {len(dataframe)} records remaining")
+        return dataframe
         
     except Exception as e:
         logger.error(f"Error in normalize function: {e}")
         raise
 
-def _normalize_string_unified(text):
-    try:
-        if pd.isna(text) or not isinstance(text, str):
-            return None
-        
-        # Strip and convert to uppercase
-        text = text.strip().upper()
-        
-        # Normalize Unicode and remove diacritical marks
-        text = unicodedata.normalize('NFKD', text)
-        text = ''.join(c for c in text if not unicodedata.combining(c))
-        
-        # Remove hyphens and collapse spaces
-        text = re.sub(r'[-\s]+', '', text)
-        
-        # Keep only alphanumeric characters
-        text = re.sub(r'[^A-Z0-9]', '', text)
-        
-        return text if text else None
-    except Exception:
-        return text
 
-def _clean_name_advanced(name):
+def main():
+    import argparse
+    import logging
+    
+    parser = argparse.ArgumentParser(description='Normalize family linkage data')
+    parser.add_argument('--source-columns', required=True, help='Comma-separated list of columns')
+    parser.add_argument('--input-file', required=True, help='Input CSV file')
+    parser.add_argument('--output-file', required=True, help='Output file')
+    parser.add_argument('--source-field-delimiter', default=',', help='Input field delimiter')
+    
+    args = parser.parse_args()
+    
+    # Setup basic logging
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+    
     try:
-        if pd.isna(name) or not isinstance(name, str):
-            return None
+        # Read input file
+        columns = args.source_columns.split(',')
+        df = pd.read_csv(args.input_file, delimiter=args.source_field_delimiter, 
+                        usecols=columns, dtype='string')
         
-        name = _normalize_string_unified(name)
-        if not name:
-            return None
+        # Normalize data
+        normalized_df = normalize(df, logger)
         
-        suffixes = ['JR', 'SR', 'II', 'III', 'IV', 'V', 'JUNIOR', 'SENIOR']
-        for suffix in suffixes:
-            if name.endswith(suffix):
-                name = name[:-len(suffix)]
-                break
+        # Write output
+        normalized_df.to_csv(args.output_file, index=False)
+        logger.info(f"Normalized data written to {args.output_file}")
         
-        prefixes = ['MC', 'MAC', 'DE', 'VAN', 'VON', 'LA', 'LE', 'DEL', 'DELLA', 'DI']
-        for prefix in prefixes:
-            if name.startswith(prefix):
-                name = name[len(prefix):]
-                break
-        
-        name = re.sub(r'[^A-Z]', '', name)
-        
-        return name if name else None
     except Exception as e:
-        return name
+        logger.error(f"Error in main: {e}")
+        raise
+
+
+if __name__ == "__main__":
+    main()

@@ -197,7 +197,7 @@ def main(relationship_type, size_threshold, max_block_size, window_size,
         total_pairs = len(results_summary) if results_summary is not None and not results_summary.empty else 0
         
         print(f"\n{'='*60}")
-        print(f"ENHANCED TEST PIPELINE COMPLETE")
+        print(f"TEST PIPELINE COMPLETE")
         print(f"{'='*60}")
         print(f"Relationship: {relationship_type}")
         print(f"Dataset size: {dataset_size} records")

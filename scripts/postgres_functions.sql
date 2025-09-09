@@ -50,19 +50,30 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION age_difference(dob1 date, dob2 date)
+CREATE OR REPLACE FUNCTION age_difference(dob1 text, dob2 text)
 RETURNS double precision AS $$
 DECLARE
     days_diff float;
     age_diff_years float;
+    date1 date;
+    date2 date;
 BEGIN
-    IF dob1 IS NULL AND dob2 IS NULL THEN
+    -- Try to cast text to date
+    BEGIN
+        date1 := dob1::date;
+        date2 := dob2::date;
+    EXCEPTION WHEN OTHERS THEN
+        -- If casting fails, return high difference
+        RETURN 100;
+    END;
+    
+    IF date1 IS NULL AND date2 IS NULL THEN
         RETURN 10;
-    ELSIF dob1 IS NULL OR dob2 IS NULL THEN
+    ELSIF date1 IS NULL OR date2 IS NULL THEN
         RETURN 100;
     END IF;
   
-    days_diff := (dob1 - dob2);
+    days_diff := (date1 - date2);
     age_diff_years := days_diff / 365.25;
     
     RETURN GREATEST(LEAST(age_diff_years / 100.0, 1.0), -1.0);
@@ -111,101 +122,6 @@ BEGIN
     RETURN LEFT(soundex_code, 4);
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
-
--- Create blocking keys 
-CREATE OR REPLACE FUNCTION create_blocking_keys(
-    batch_size integer DEFAULT 100000,
-    job_schema text DEFAULT 'public',
-    records_table text DEFAULT 'records'
-) RETURNS void AS $$
-DECLARE
-    total_records integer;
-    processed_records integer := 0;
-    start_time timestamp;
-    full_table_name text;
-BEGIN
-    start_time := clock_timestamp();
-    
-    -- Build full table name
-    full_table_name := quote_ident(job_schema) || '.' || quote_ident(records_table);
-    
-    -- Drop and recreate record_blocks table
-    EXECUTE format('DROP TABLE IF EXISTS %I.record_blocks CASCADE', job_schema);
-    EXECUTE format('CREATE UNLOGGED TABLE %I.record_blocks (
-        id TEXT,
-        block_key TEXT,
-        sort_key TEXT
-    )', job_schema);
-    
-    -- Get total record count
-    EXECUTE format('SELECT COUNT(*) FROM %s', full_table_name) INTO total_records;
-    
-    RAISE NOTICE 'Processing % records from % for blocking keys', total_records, full_table_name;
-    
-    -- Create blocking keys
-    EXECUTE format('
-        INSERT INTO %I.record_blocks (id, block_key, sort_key)
-        WITH record_data AS (
-            SELECT 
-                r.id, 
-                r.last_name, 
-                r.zip, 
-                r.address,
-                r.dob,
-                r.sex,
-                EXTRACT(YEAR FROM r.dob) as birth_year,
-                soundex(r.last_name) as ln_soundex,
-                LEFT(r.last_name, 6) as ln_prefix
-            FROM %s r
-        )
-        SELECT id, block_key, sort_key FROM (
-            SELECT 
-                id,
-                ''N_'' || COALESCE(ln_soundex, ''NULL'') || ''_'' || COALESCE(ln_prefix, ''NULL'') as block_key,
-                COALESCE(last_name, '''') || ''|'' || COALESCE(address, '''') as sort_key
-            FROM record_data
-            
-            UNION ALL
-            
-            SELECT 
-                id,
-                ''A_'' || COALESCE(LEFT(zip, 3), ''NA'') || ''_'' || COALESCE(LEFT(address, 6), ''NA'') as block_key,
-                COALESCE(address, '''') || ''|'' || COALESCE(last_name, '''') as sort_key
-            FROM record_data
-            
-            UNION ALL
-            
-            SELECT 
-                id,
-                ''D_'' || COALESCE(birth_year::TEXT, ''NA'') || ''_'' || COALESCE(sex, ''NA'') || ''_'' || COALESCE(ln_soundex, ''NULL'') as block_key,
-                COALESCE(birth_year::TEXT, ''NA'') || ''|'' || COALESCE(sex, '''') || ''|'' || COALESCE(last_name, '''') as sort_key
-            FROM record_data
-            WHERE birth_year IS NOT NULL
-        ) blocks
-    ', job_schema, full_table_name);
-    
-    GET DIAGNOSTICS processed_records = ROW_COUNT;
-    
-    -- Create indexes
-    EXECUTE format('CREATE INDEX idx_%I_record_blocks_block_key ON %I.record_blocks(block_key)', 
-                   job_schema, job_schema);
-    EXECUTE format('CREATE INDEX idx_%I_record_blocks_gid ON %I.record_blocks(id)', 
-                   job_schema, job_schema);
-    
-    -- Create block_sizes table
-    EXECUTE format('DROP TABLE IF EXISTS %I.block_sizes CASCADE', job_schema);
-    EXECUTE format('CREATE TABLE %I.block_sizes AS
-        SELECT block_key, COUNT(*) AS block_size
-        FROM %I.record_blocks
-        GROUP BY block_key', job_schema, job_schema, job_schema);
-    
-    EXECUTE format('CREATE INDEX idx_%I_block_sizes ON %I.block_sizes(block_key)', 
-                   job_schema, job_schema);
-    
-    RAISE NOTICE 'Blocking keys created: % entries in % for schema %', 
-        processed_records, clock_timestamp() - start_time, job_schema;
-END;
-$$ LANGUAGE plpgsql;
 
 -- Create blocking keys for parallel workers
 CREATE OR REPLACE FUNCTION create_blocking_keys_test(
@@ -258,9 +174,9 @@ BEGIN
                 r.last_name, 
                 r.zip, 
                 r.address,
-                r.dob,
+                r.dob::DATE as dob,
                 r.sex,
-                EXTRACT(YEAR FROM r.dob) as birth_year,
+                EXTRACT(YEAR FROM r.dob::DATE) as birth_year,
                 soundex(r.last_name) as ln_soundex,
                 LEFT(r.last_name, 6) as ln_prefix
             FROM %s r
@@ -302,279 +218,6 @@ BEGIN
     
     RAISE NOTICE 'Table % created with % entries in %', 
         table_name, processed_records, clock_timestamp() - start_time;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION compare_records_optimized(
-    max_block_size integer DEFAULT 500,
-    window_size integer DEFAULT 100, 
-    overlap integer DEFAULT 50,
-    chunk_size integer DEFAULT 1000,
-    job_schema text DEFAULT 'public',
-    records_table text DEFAULT 'records'
-) RETURNS void AS $$
-DECLARE
-    total_blocks integer;
-    processed_blocks integer := 0;
-    processed_records integer := 0;
-    block_key_val text;
-    block_size_val integer;
-    start_time timestamp;
-    total_comparisons integer := 0;
-    full_table_name text;
-    processed_table_name text;
-BEGIN
-    start_time := clock_timestamp();
-    
-    -- Build table names
-    full_table_name := quote_ident(job_schema) || '.' || quote_ident(records_table);
-    processed_table_name := quote_ident(job_schema) || '.processed_records';
-    
-    -- Create processed_records table
-    EXECUTE format('DROP TABLE IF EXISTS %s CASCADE', processed_table_name);
-    EXECUTE format('CREATE UNLOGGED TABLE %s (
-        from_id TEXT,
-        to_id TEXT,
-        edit_dist_ln FLOAT,
-        edit_dist_phone_num FLOAT,
-        edit_dist_mn FLOAT,
-        edit_dist_zip FLOAT,
-        edit_dist_city FLOAT,
-        age_diff FLOAT,
-        sex_diff INTEGER,
-        ssn_match INTEGER,
-        state_match INTEGER,
-        edit_dist_mail_address FLOAT,
-        record1_sex INTEGER,
-        record2_sex INTEGER,
-        record1_agecategory INTEGER,
-        record2_agecategory INTEGER,
-        PRIMARY KEY (from_id, to_id)
-    )', processed_table_name);
-    
-    -- Get total blocks to process
-    EXECUTE format('SELECT COUNT(*) FROM %I.block_sizes 
-                    WHERE block_size <= %s AND block_size > 3', 
-                   job_schema, max_block_size) INTO total_blocks;
-    
-    RAISE NOTICE 'Processing % blocks in schema % with max size %', 
-        total_blocks, job_schema, max_block_size;
-    
-    -- Process each block
-    FOR block_key_val, block_size_val IN 
-        EXECUTE format('SELECT bs.block_key, bs.block_size
-                       FROM %I.block_sizes bs
-                       WHERE bs.block_size <= %s AND bs.block_size > 3
-                       ORDER BY bs.block_size', job_schema, max_block_size)
-    LOOP
-        processed_blocks := processed_blocks + 1;
-        
-        -- Insert comparisons
-        EXECUTE format('
-            INSERT INTO %s
-            WITH block_records AS (
-                SELECT 
-                    r.*,
-                    ROW_NUMBER() OVER (ORDER BY rb.sort_key, r.id) AS row_num,
-                    EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob)) as age_years
-                FROM %I.record_blocks rb
-                JOIN %s r ON rb.id = r.id
-                WHERE rb.block_key = $1
-            ),
-            record_pairs AS (
-                SELECT 
-                    r1.id AS from_id,
-                    r2.id AS to_id,
-                    r1.last_name AS r1_ln, r2.last_name AS r2_ln,
-                    r1.middle_name AS r1_mi, r2.middle_name AS r2_mi,
-                    r1.dob AS r1_dob, r2.dob AS r2_dob,
-                    r1.city AS r1_city, r2.city AS r2_city,
-                    r1.zip AS r1_zip, r2.zip AS r2_zip,
-                    r1.phone AS r1_tel, r2.phone AS r2_tel,
-                    r1.state AS r1_st, r2.state AS r2_st,
-                    r1.address AS r1_adr, r2.address AS r2_adr,
-                    r1.sex AS r1_sex, r2.sex AS r2_sex,
-                    r1.ssn AS r1_ssn, r2.ssn AS r2_ssn,
-                    r1.age_years AS r1_age_years, r2.age_years AS r2_age_years
-                FROM block_records r1
-                JOIN block_records r2 ON r1.row_num < r2.row_num
-            )
-            SELECT 
-                from_id, to_id,
-                edit_distance(r1_ln, r2_ln),
-                edit_distance(r1_tel, r2_tel),
-                edit_distance(r1_mi, r2_mi),
-                edit_distance(r1_zip, r2_zip),
-                edit_distance(r1_city, r2_city),
-                age_difference(r1_dob, r2_dob),
-                CASE 
-                    WHEN r1_sex IS NULL OR r2_sex IS NULL THEN -1
-                    WHEN r1_sex != r2_sex THEN 1
-                    ELSE 0 
-                END,
-                CASE 
-                    WHEN r1_ssn IS NULL OR r2_ssn IS NULL THEN -1
-                    WHEN r1_ssn = r2_ssn THEN 1
-                    ELSE 0 
-                END,
-                CASE 
-                    WHEN r1_st IS NULL OR r2_st IS NULL THEN -1
-                    WHEN r1_st = r2_st THEN 1
-                    ELSE 0 
-                END,
-                edit_distance(r1_adr, r2_adr),
-                CASE 
-                    WHEN r1_sex IS NULL THEN -1
-                    WHEN r1_sex = ''M'' THEN 0
-                    WHEN r1_sex = ''F'' THEN 1
-                    ELSE -1
-                END,
-                CASE 
-                    WHEN r2_sex IS NULL THEN -1
-                    WHEN r2_sex = ''M'' THEN 0
-                    WHEN r2_sex = ''F'' THEN 1
-                    ELSE -1
-                END,
-                CASE 
-                    WHEN r1_age_years IS NULL THEN -1
-                    WHEN r1_age_years < 18 THEN 0
-                    WHEN r1_age_years BETWEEN 18 AND 50 THEN 1
-                    ELSE 2
-                END,
-                CASE 
-                    WHEN r2_age_years IS NULL THEN -1
-                    WHEN r2_age_years < 18 THEN 0
-                    WHEN r2_age_years BETWEEN 18 AND 50 THEN 1
-                    ELSE 2
-                END
-            FROM record_pairs
-            ON CONFLICT (from_id, to_id) DO NOTHING
-        ', processed_table_name, job_schema, full_table_name) USING block_key_val;
-        
-        processed_records := processed_records + block_size_val;
-        
-        IF processed_blocks % 100 = 0 THEN
-            RAISE NOTICE 'Progress: % of % blocks processed', processed_blocks, total_blocks;
-        END IF;
-    END LOOP;
-    
-    EXECUTE format('SELECT COUNT(*) FROM %s', processed_table_name) INTO total_comparisons;
-    
-    RAISE NOTICE 'Completed: % blocks, % comparisons in %',
-        processed_blocks, total_comparisons, clock_timestamp() - start_time;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION compare_records_exhaustive(
-    job_schema text DEFAULT 'public',
-    records_table text DEFAULT 'records'
-) RETURNS void AS $$
-DECLARE
-    total_records integer;
-    start_time timestamp;
-    total_comparisons integer := 0;
-    full_table_name text;
-    processed_table_name text;
-BEGIN
-    start_time := clock_timestamp();
-    
-    -- Build table names
-    full_table_name := quote_ident(job_schema) || '.' || quote_ident(records_table);
-    processed_table_name := quote_ident(job_schema) || '.processed_records';
-    
-    EXECUTE format('SELECT COUNT(*) FROM %s', full_table_name) INTO total_records;
-    
-    RAISE NOTICE 'Starting exhaustive comparison of % records from %', total_records, full_table_name;
-    
-    -- Create processed_records table
-    EXECUTE format('DROP TABLE IF EXISTS %s CASCADE', processed_table_name);
-    EXECUTE format('CREATE UNLOGGED TABLE %s (
-        from_id TEXT,
-        to_id TEXT,
-        edit_dist_ln FLOAT,
-        edit_dist_phone_num FLOAT,
-        edit_dist_mn FLOAT,
-        edit_dist_zip FLOAT,
-        edit_dist_city FLOAT,
-        age_diff FLOAT,
-        sex_diff INTEGER,
-        ssn_match INTEGER,
-        state_match INTEGER,
-        edit_dist_mail_address FLOAT,
-        record1_sex INTEGER,
-        record2_sex INTEGER,
-        record1_agecategory INTEGER,
-        record2_agecategory INTEGER,
-        PRIMARY KEY (from_id, to_id)
-    )', processed_table_name);
-    
-    -- Create exhaustive comparisons
-    EXECUTE format('
-        INSERT INTO %s
-        WITH age_data AS (
-            SELECT 
-                r.*,
-                EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob)) as age_years
-            FROM %s r
-        )
-        SELECT 
-            r1.id, 
-            r2.id,
-            edit_distance(r1.last_name, r2.last_name),
-            edit_distance(r1.phone, r2.phone),
-            edit_distance(r1.middle_name, r2.middle_name),
-            edit_distance(r1.zip, r2.zip),
-            edit_distance(r1.city, r2.city),
-            age_difference(r1.dob, r2.dob),
-            CASE 
-                WHEN r1.sex IS NULL OR r2.sex IS NULL THEN -1
-                WHEN r1.sex != r2.sex THEN 1
-                ELSE 0 
-            END,
-            CASE 
-                WHEN r1.ssn IS NULL OR r2.ssn IS NULL THEN -1
-                WHEN r1.ssn = r2.ssn THEN 1
-                ELSE 0 
-            END,
-            CASE 
-                WHEN r1.state IS NULL OR r2.state IS NULL THEN -1
-                WHEN r1.state = r2.state THEN 1
-                ELSE 0 
-            END,
-            edit_distance(r1.address, r2.address),
-            CASE 
-                WHEN r1.sex IS NULL THEN -1
-                WHEN r1.sex = ''M'' THEN 0
-                WHEN r1.sex = ''F'' THEN 1
-                ELSE -1
-            END,
-            CASE 
-                WHEN r2.sex IS NULL THEN -1
-                WHEN r2.sex = ''M'' THEN 0
-                WHEN r2.sex = ''F'' THEN 1
-                ELSE -1
-            END,
-            CASE 
-                WHEN r1.age_years IS NULL THEN -1
-                WHEN r1.age_years < 18 THEN 0
-                WHEN r1.age_years BETWEEN 18 AND 50 THEN 1
-                ELSE 2
-            END,
-            CASE 
-                WHEN r2.age_years IS NULL THEN -1
-                WHEN r2.age_years < 18 THEN 0
-                WHEN r2.age_years BETWEEN 18 AND 50 THEN 1
-                ELSE 2
-            END
-        FROM age_data r1
-        JOIN age_data r2 ON r1.id < r2.id
-        ON CONFLICT (from_id, to_id) DO NOTHING
-    ', processed_table_name, full_table_name);
-    
-    GET DIAGNOSTICS total_comparisons = ROW_COUNT;
-    
-    RAISE NOTICE 'Exhaustive processing complete: % matches found in %',
-        total_comparisons, clock_timestamp() - start_time;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -660,7 +303,7 @@ BEGIN
                             PARTITION BY rb.block_key 
                             ORDER BY rb.sort_key, r.id
                         ) AS row_num,
-                        EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob)) as age_years
+                        EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob::DATE)) as age_years
                     FROM %I.record_blocks rb
                     JOIN %s r ON rb.id = r.id
                     WHERE rb.block_key = $1
@@ -789,7 +432,7 @@ BEGIN
        WITH age_data AS (
            SELECT 
                r.*,
-               EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob)) as age_years
+               EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob::DATE)) as age_years
            FROM %s r
        )
        SELECT 
@@ -1006,7 +649,7 @@ BEGIN
    WITH age_data AS (
        SELECT 
            r.*,
-           EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob)) as age_years
+           EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob::DATE)) as age_years
        FROM records r
    )
    SELECT 
