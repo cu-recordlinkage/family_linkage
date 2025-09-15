@@ -330,7 +330,7 @@ BEGIN
                    (
                        CASE WHEN edit_distance(r1_ln, r2_ln) <= 0.5 THEN 1 ELSE 0 END +
                        CASE WHEN edit_distance(r1_mi, r2_mi) <= 0.5 THEN 1 ELSE 0 END +
-                       CASE WHEN age_difference(r1_dob, r2_dob) BETWEEN -0.55 AND 0.55 THEN 1 ELSE 0 END +
+                       CASE WHEN age_difference(r1_dob::text, r2_dob::text) BETWEEN -0.55 AND 0.55 THEN 1 ELSE 0 END +
                        CASE WHEN r1_st = r2_st THEN 1 ELSE 0 END +
                        CASE WHEN r1_city = r2_city THEN 1 ELSE 0 END
                    )::float,
@@ -339,7 +339,7 @@ BEGIN
                    edit_distance(r1_mi, r2_mi),
                    edit_distance(r1_zip, r2_zip),
                    edit_distance(r1_city, r2_city),
-                   age_difference(r1_dob, r2_dob),
+                   age_difference(r1_dob::text, r2_dob::text),
                    CASE 
                        WHEN r1_sex IS NULL OR r2_sex IS NULL THEN -1
                        WHEN r1_sex != r2_sex THEN 1
@@ -384,7 +384,7 @@ BEGIN
                WHERE (
                    CASE WHEN edit_distance(r1_ln, r2_ln) <= 0.5 THEN 1 ELSE 0 END +
                    CASE WHEN edit_distance(r1_mi, r2_mi) <= 0.5 THEN 1 ELSE 0 END +
-                   CASE WHEN age_difference(r1_dob, r2_dob) BETWEEN -0.55 AND 0.55 THEN 1 ELSE 0 END +
+                   CASE WHEN age_difference(r1_dob::text, r2_dob::text) BETWEEN -0.55 AND 0.55 THEN 1 ELSE 0 END +
                    CASE WHEN r1_st = r2_st THEN 1 ELSE 0 END +
                    CASE WHEN r1_city = r2_city THEN 1 ELSE 0 END
                )::float >= $4
@@ -441,7 +441,7 @@ BEGIN
            (
                CASE WHEN edit_distance(r1.last_name, r2.last_name) <= 0.5 THEN 1 ELSE 0 END +
                CASE WHEN edit_distance(r1.middle_name, r2.middle_name) <= 0.5 THEN 1 ELSE 0 END +
-               CASE WHEN age_difference(r1.dob, r2.dob) BETWEEN -0.55 AND 0.55 THEN 1 ELSE 0 END +
+               CASE WHEN age_difference(r1.dob::text, r2.dob::text) BETWEEN -0.55 AND 0.55 THEN 1 ELSE 0 END +
                CASE WHEN r1.state = r2.state THEN 1 ELSE 0 END +
                CASE WHEN r1.city = r2.city THEN 1 ELSE 0 END
            )::float AS similarity_score,
@@ -450,7 +450,7 @@ BEGIN
            edit_distance(r1.middle_name, r2.middle_name) as edit_dist_mn,
            edit_distance(r1.zip, r2.zip) as edit_dist_zip,
            edit_distance(r1.city, r2.city) as edit_dist_city,
-           age_difference(r1.dob, r2.dob) as age_diff,
+           age_difference(r1.dob::text, r2.dob::text) as age_diff,
            CASE 
                WHEN r1.sex IS NULL OR r2.sex IS NULL THEN -1
                WHEN r1.sex != r2.sex THEN 1
@@ -660,7 +660,7 @@ BEGIN
        edit_distance(r1.middle_name, r2.middle_name),
        edit_distance(r1.zip, r2.zip),
        edit_distance(r1.city, r2.city),
-       age_difference(r1.dob, r2.dob),
+       age_difference(r1.dob::text, r2.dob::text),
        CASE 
            WHEN r1.sex IS NULL OR r2.sex IS NULL THEN -1
            WHEN r1.sex != r2.sex THEN 1
