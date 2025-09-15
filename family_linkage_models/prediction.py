@@ -22,6 +22,8 @@ def compare(database_url, job_schema, records_table, logger, size_threshold=1000
         update_progress("Creating database connection", 10)
         engine = create_engine(database_url, pool_size=20, max_overflow=30, pool_pre_ping=True)
         
+        with engine.connect().execution_options(autocommit=True) as connection:
+            connection.execute(text(f"SET search_path TO {job_schema}, public"))
         # Get dataset size
         with engine.connect() as connection:
             result = connection.execute(
@@ -341,6 +343,9 @@ def _worker_create_blocking_keys(db_url, job_schema, records_table, batch_size,
     try:
         engine = create_engine(db_url)
         with engine.connect().execution_options(autocommit=True) as connection:
+            # Set the search path to include the job schema
+            connection.execute(text(f"SET search_path TO {job_schema}, public"))
+            
             table_suffix = f"worker_{worker_id}"
             connection.execute(text(
                 "SELECT create_blocking_keys_test(:batch_size, :gid_start, :gid_end, :table_suffix, :job_schema, :records_table)"
@@ -349,7 +354,7 @@ def _worker_create_blocking_keys(db_url, job_schema, records_table, batch_size,
                 "gid_start": gid_start,
                 "gid_end": gid_end,
                 "table_suffix": table_suffix,
-                "job_schema": job_schema,
+                "job_schema": job_schema, 
                 "records_table": records_table
             })
         engine.dispose()
@@ -364,6 +369,9 @@ def _worker_compare_records_optimized(db_url, job_schema, records_table,
     try:
         engine = create_engine(db_url)
         with engine.connect().execution_options(autocommit=True) as connection:
+            # Set the search path to include the job schema
+            connection.execute(text(f"SET search_path TO {job_schema}, public"))
+            
             connection.execute(text(
                 "SELECT compare_records_optimized_parallel(:block_start, :block_end, "
                 ":max_block_size, :window_size, :overlap, :similarity_threshold, "
@@ -376,7 +384,7 @@ def _worker_compare_records_optimized(db_url, job_schema, records_table,
                 "overlap": overlap,
                 "similarity_threshold": similarity_threshold,
                 "table_suffix": str(worker_id),
-                "job_schema": job_schema,
+                "job_schema": job_schema, 
                 "records_table": records_table
             })
         engine.dispose()
@@ -389,6 +397,9 @@ def _worker_compare_records_exhaustive(db_url, job_schema, records_table,
     try:
         engine = create_engine(db_url)
         with engine.connect().execution_options(autocommit=True) as connection:
+            # Set the search path to include the job schema
+            connection.execute(text(f"SET search_path TO {job_schema}, public"))
+            
             connection.execute(text(
                 "SELECT compare_records_exhaustive_parallel(:gid_start, :gid_end, "
                 ":table_suffix, :job_schema, :records_table)"
@@ -396,7 +407,7 @@ def _worker_compare_records_exhaustive(db_url, job_schema, records_table,
                 "gid_start": gid_start,
                 "gid_end": gid_end,
                 "table_suffix": str(worker_id),
-                "job_schema": job_schema,
+                "job_schema": job_schema,  # Ensure job_schema is passed
                 "records_table": records_table
             })
         engine.dispose()
