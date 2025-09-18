@@ -1,11 +1,8 @@
 import pandas as pd
-import numpy as np
 import joblib
 import os
 from sqlalchemy import create_engine, text
-import multiprocessing
 from tqdm import tqdm
-import time
 import logging
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
@@ -20,12 +17,10 @@ def compare(database_url, job_schema, records_table, logger, size_threshold=1000
     
     try:
         update_progress("Creating database connection", 10)
-        engine = create_engine(database_url, pool_size=20, max_overflow=30, pool_pre_ping=True)
-        
-        with engine.connect().execution_options(autocommit=True) as connection:
-            connection.execute(text(f"SET search_path TO {job_schema}, public"))
+        engine = create_engine(database_url)
+
         # Get dataset size
-        with engine.connect() as connection:
+        with engine.begin() as connection:
             result = connection.execute(
                 text(f"SELECT COUNT(*) FROM {job_schema}.{records_table}")
             )
@@ -36,7 +31,7 @@ def compare(database_url, job_schema, records_table, logger, size_threshold=1000
         
         update_progress("Cleaning up existing tables", 25)
         # Clean up existing tables before starting
-        with engine.connect().execution_options(autocommit=True) as connection:
+        with engine.begin() as connection:
             tables_to_drop = ['record_blocks', 'block_sizes', 'processed_records']
             for table in tables_to_drop:
                 connection.execute(text(f"DROP TABLE IF EXISTS {job_schema}.{table} CASCADE"))
@@ -53,13 +48,13 @@ def compare(database_url, job_schema, records_table, logger, size_threshold=1000
                 connection.execute(text(f"DROP TABLE IF EXISTS {job_schema}.{table[0]} CASCADE"))
             
             logger.info("Cleaned up existing tables")
-        
+
         # Choose strategy based on dataset size
         if dataset_size > size_threshold:
             update_progress(f"Using optimized blocking strategy", 30)
             logger.info(f"Using optimized blocking strategy (dataset > {size_threshold})")
             _run_parallel_optimized_comparison_with_progress(
-                engine, job_schema, records_table, logger, dataset_size,
+                database_url, job_schema, records_table, logger, dataset_size,
                 max_block_size, window_size, overlap, blocking_batch_size, 
                 num_workers, similarity_threshold, tqdm_flag
             )
@@ -67,13 +62,13 @@ def compare(database_url, job_schema, records_table, logger, size_threshold=1000
             update_progress(f"Using exhaustive comparison", 30)
             logger.info(f"Using parallel exhaustive comparison (dataset <= {size_threshold})")
             _run_parallel_exhaustive_comparison_with_progress(
-                engine, job_schema, records_table, logger, dataset_size, num_workers, tqdm_flag
+                database_url, job_schema, records_table, logger, dataset_size, num_workers, tqdm_flag
             )
         
         update_progress("Comparison completed", 90)
         
         # Get final count
-        with engine.connect() as connection:
+        with engine.begin() as connection:
             result = connection.execute(
                 text(f"SELECT COUNT(*) FROM {job_schema}.processed_records")
             )
@@ -81,210 +76,215 @@ def compare(database_url, job_schema, records_table, logger, size_threshold=1000
         
         update_progress(f"Generated {total_pairs} record pairs", 100)
         logger.info(f"Comparison complete: {total_pairs} record pairs generated")
-        engine.dispose()
-        
     except Exception as e:
         logger.error(f"Error in compare function: {e}")
         raise
+    finally:
+        engine.dispose()
 
-def _run_parallel_optimized_comparison_with_progress(engine, job_schema, records_table, logger, 
+def _run_parallel_optimized_comparison_with_progress(database_url, job_schema, records_table, logger,
                                                    dataset_size, max_block_size, window_size, 
                                                    overlap, blocking_batch_size, num_workers, 
                                                    similarity_threshold, tqdm_flag):
-    
-    # Step 1: Parallel blocking keys creation
-    logger.info("Creating blocking keys in parallel...")
-    
-    with engine.connect() as connection:
-        result = connection.execute(text(
-            f"SELECT ARRAY_AGG(DISTINCT id ORDER BY id) FROM {job_schema}.{records_table}"
-        ))
-        gid_array = result.scalar()
-        
-        if not gid_array or len(gid_array) == 0:
-            raise ValueError("No records found in database")
-        
+    try:
+        # Step 1: Parallel blocking keys creation
+        logger.info("Creating blocking keys in parallel...")
+        engine = create_engine(database_url)
+        with engine.begin() as connection:
+            result = connection.execute(text(
+                f"SELECT ARRAY_AGG(DISTINCT id ORDER BY id) FROM {job_schema}.{records_table}"
+            ))
+            gid_array = result.scalar()
+
+            if not gid_array or len(gid_array) == 0:
+                raise ValueError("No records found in database")
+
+            total_gids = len(gid_array)
+            chunk_size = total_gids // num_workers
+            gid_ranges = []
+
+            for i in range(num_workers):
+                start_idx = i * chunk_size
+                end_idx = (i + 1) * chunk_size - 1 if i < num_workers - 1 else total_gids - 1
+                gid_ranges.append((gid_array[start_idx], gid_array[end_idx]))
+
+        # Execute parallel blocking
+        with ProcessPoolExecutor(max_workers=num_workers) as executor:
+            # Submit all tasks
+            futures = []
+            for i, (gid_start, gid_end) in enumerate(gid_ranges):
+                future = executor.submit(
+                    _worker_create_blocking_keys,
+                    engine.url, job_schema, records_table,
+                    blocking_batch_size, gid_start, gid_end, i
+                )
+                futures.append(future)
+
+            # Track progress with tqdm if enabled
+            if tqdm_flag:
+                with tqdm(total=len(futures), desc="Creating blocking keys", unit="worker") as pbar:
+                    for future in as_completed(futures):
+                        try:
+                            future.result()  # This will raise an exception if the worker failed
+                            pbar.update(1)
+                        except Exception as e:
+                            logger.error(f"Worker failed: {e}")
+                            raise
+            else:
+                for future in as_completed(futures):
+                    try:
+                        future.result()  # This will raise an exception if the worker failed
+                    except Exception as e:
+                        logger.error(f"Worker failed: {e}")
+                        raise
+
+        # Merge blocking tables
+        logger.info("Merging blocking tables...")
+        with engine.begin() as connection:
+            connection.execute(text(f"SELECT merge_blocking_tables('{job_schema}')"))
+
+            block_count = connection.execute(
+                text(f"SELECT COUNT(*) FROM {job_schema}.record_blocks")
+            ).scalar()
+            unique_blocks = connection.execute(
+                text(f"SELECT COUNT(*) FROM {job_schema}.block_sizes")
+            ).scalar()
+            logger.info(f"Merged to {block_count} blocking entries with {unique_blocks} unique blocks")
+
+        # Step 2: Parallel optimized comparison
+        logger.info("Performing parallel optimized record comparison...")
+
+        with engine.begin() as connection:
+            result = connection.execute(text(f"""
+                SELECT ARRAY_AGG(block_key ORDER BY block_key) 
+                FROM {job_schema}.block_sizes 
+                WHERE block_size <= :max_block_size AND block_size > 3
+            """), {"max_block_size": max_block_size})
+            block_array = result.scalar()
+
+            if not block_array or len(block_array) == 0:
+                logger.warning("No blocks found for comparison")
+                return
+
+        # Partition blocks for workers
+        total_blocks = len(block_array)
+        chunk_size = total_blocks // num_workers
+        block_ranges = []
+
+        for i in range(num_workers):
+            start_idx = i * chunk_size
+            end_idx = (i + 1) * chunk_size - 1 if i < num_workers - 1 else total_blocks - 1
+            block_ranges.append((block_array[start_idx], block_array[end_idx]))
+
+        # Execute parallel comparison
+        with ProcessPoolExecutor(max_workers=num_workers) as executor:
+            futures = []
+            for i, (block_start, block_end) in enumerate(block_ranges):
+                future = executor.submit(
+                    _worker_compare_records_optimized,
+                    database_url, job_schema, records_table,
+                    block_start, block_end, max_block_size,
+                    window_size, overlap, similarity_threshold, i
+                )
+                futures.append(future)
+
+            # Track comparison progress
+            if tqdm_flag:
+                with tqdm(total=len(futures), desc="Comparing records", unit="worker") as pbar:
+                    for future in as_completed(futures):
+                        try:
+                            future.result()
+                            pbar.update(1)
+                        except Exception as e:
+                            logger.error(f"Comparison worker failed: {e}")
+                            raise
+            else:
+                for future in as_completed(futures):
+                    try:
+                        future.result()
+                    except Exception as e:
+                        logger.error(f"Comparison worker failed: {e}")
+                        raise
+
+        # Merge results
+        logger.info("Merging comparison results...")
+        with engine.begin() as connection:
+            connection.execute(text(f"SELECT merge_processed_records('{job_schema}')"))
+            final_count = connection.execute(
+                text(f"SELECT COUNT(*) FROM {job_schema}.processed_records")
+            ).scalar()
+            logger.info(f"Merged {final_count} unique record pairs")
+    finally:
+        engine.dispose()
+
+def _run_parallel_exhaustive_comparison_with_progress(database_url, job_schema, records_table, logger,
+                                                    dataset_size, num_workers, tqdm_flag):
+    try:
+        logger.info("Running parallel exhaustive comparison...")
+        engine = create_engine(database_url)
+        with engine.begin() as connection:
+            result = connection.execute(text(
+                f"SELECT ARRAY_AGG(DISTINCT id ORDER BY id) FROM {job_schema}.{records_table}"
+            ))
+            gid_array = result.scalar()
+
+            if not gid_array:
+                raise ValueError("No records found")
+
         total_gids = len(gid_array)
         chunk_size = total_gids // num_workers
         gid_ranges = []
-        
+
         for i in range(num_workers):
             start_idx = i * chunk_size
             end_idx = (i + 1) * chunk_size - 1 if i < num_workers - 1 else total_gids - 1
             gid_ranges.append((gid_array[start_idx], gid_array[end_idx]))
-    
-    # Execute parallel blocking
-    with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        # Submit all tasks
-        futures = []
-        for i, (gid_start, gid_end) in enumerate(gid_ranges):
-            future = executor.submit(
-                _worker_create_blocking_keys,
-                engine.url, job_schema, records_table, 
-                blocking_batch_size, gid_start, gid_end, i
-            )
-            futures.append(future)
-        
-        # Track progress with tqdm if enabled
-        if tqdm_flag:
-            with tqdm(total=len(futures), desc="Creating blocking keys", unit="worker") as pbar:
-                for future in as_completed(futures):
-                    try:
-                        future.result()  # This will raise an exception if the worker failed
-                        pbar.update(1)
-                    except Exception as e:
-                        logger.error(f"Worker failed: {e}")
-                        raise
-        else:
-            for future in as_completed(futures):
-                try:
-                    future.result()  # This will raise an exception if the worker failed
-                except Exception as e:
-                    logger.error(f"Worker failed: {e}")
-                    raise
-    
-    # Merge blocking tables
-    logger.info("Merging blocking tables...")
-    with engine.connect().execution_options(autocommit=True) as connection:
-        connection.execute(text(f"SELECT merge_blocking_tables('{job_schema}')"))
-        
-        block_count = connection.execute(
-            text(f"SELECT COUNT(*) FROM {job_schema}.record_blocks")
-        ).scalar()
-        unique_blocks = connection.execute(
-            text(f"SELECT COUNT(*) FROM {job_schema}.block_sizes")
-        ).scalar()
-        logger.info(f"Merged to {block_count} blocking entries with {unique_blocks} unique blocks")
-    
-    # Step 2: Parallel optimized comparison
-    logger.info("Performing parallel optimized record comparison...")
-    
-    with engine.connect() as connection:
-        result = connection.execute(text(f"""
-            SELECT ARRAY_AGG(block_key ORDER BY block_key) 
-            FROM {job_schema}.block_sizes 
-            WHERE block_size <= :max_block_size AND block_size > 3
-        """), {"max_block_size": max_block_size})
-        block_array = result.scalar()
-        
-        if not block_array or len(block_array) == 0:
-            logger.warning("No blocks found for comparison")
-            return
-    
-    # Partition blocks for workers
-    total_blocks = len(block_array)
-    chunk_size = total_blocks // num_workers
-    block_ranges = []
-    
-    for i in range(num_workers):
-        start_idx = i * chunk_size
-        end_idx = (i + 1) * chunk_size - 1 if i < num_workers - 1 else total_blocks - 1
-        block_ranges.append((block_array[start_idx], block_array[end_idx]))
-    
-    # Execute parallel comparison
-    with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        futures = []
-        for i, (block_start, block_end) in enumerate(block_ranges):
-            future = executor.submit(
-                _worker_compare_records_optimized,
-                engine.url, job_schema, records_table,
-                block_start, block_end, max_block_size,
-                window_size, overlap, similarity_threshold, i
-            )
-            futures.append(future)
-        
-        # Track comparison progress
-        if tqdm_flag:
-            with tqdm(total=len(futures), desc="Comparing records", unit="worker") as pbar:
-                for future in as_completed(futures):
-                    try:
-                        future.result()
-                        pbar.update(1)
-                    except Exception as e:
-                        logger.error(f"Comparison worker failed: {e}")
-                        raise
-        else:
-            for future in as_completed(futures):
-                try:
-                    future.result()
-                except Exception as e:
-                    logger.error(f"Comparison worker failed: {e}")
-                    raise
-    
-    # Merge results
-    logger.info("Merging comparison results...")
-    with engine.connect().execution_options(autocommit=True) as connection:
-        connection.execute(text(f"SELECT merge_processed_records('{job_schema}')"))
-        final_count = connection.execute(
-            text(f"SELECT COUNT(*) FROM {job_schema}.processed_records")
-        ).scalar()
-        logger.info(f"Merged {final_count} unique record pairs")
 
-def _run_parallel_exhaustive_comparison_with_progress(engine, job_schema, records_table, logger, 
-                                                    dataset_size, num_workers, tqdm_flag):
-    
-    logger.info("Running parallel exhaustive comparison...")
-    
-    with engine.connect() as connection:
-        result = connection.execute(text(
-            f"SELECT ARRAY_AGG(DISTINCT id ORDER BY id) FROM {job_schema}.{records_table}"
-        ))
-        gid_array = result.scalar()
-        
-        if not gid_array:
-            raise ValueError("No records found")
-    
-    total_gids = len(gid_array)
-    chunk_size = total_gids // num_workers
-    gid_ranges = []
-    
-    for i in range(num_workers):
-        start_idx = i * chunk_size
-        end_idx = (i + 1) * chunk_size - 1 if i < num_workers - 1 else total_gids - 1
-        gid_ranges.append((gid_array[start_idx], gid_array[end_idx]))
-    
-    # Execute parallel exhaustive comparison
-    with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        futures = []
-        for i, (gid_start, gid_end) in enumerate(gid_ranges):
-            future = executor.submit(
-                _worker_compare_records_exhaustive,
-                engine.url, job_schema, records_table,
-                gid_start, gid_end, i
-            )
-            futures.append(future)
-        
-        # Track progress
-        if tqdm_flag:
-            with tqdm(total=len(futures), desc="Exhaustive comparison", unit="worker") as pbar:
+        # Execute parallel exhaustive comparison
+        with ProcessPoolExecutor(max_workers=num_workers) as executor:
+            futures = []
+            for i, (gid_start, gid_end) in enumerate(gid_ranges):
+                future = executor.submit(
+                    _worker_compare_records_exhaustive,
+                    database_url, job_schema, records_table,
+                    gid_start, gid_end, i
+                )
+                futures.append(future)
+
+            # Track progress
+            if tqdm_flag:
+                with tqdm(total=len(futures), desc="Exhaustive comparison", unit="worker") as pbar:
+                    for future in as_completed(futures):
+                        try:
+                            future.result()
+                            pbar.update(1)
+                        except Exception as e:
+                            logger.error(f"Exhaustive worker failed: {e}")
+                            raise
+            else:
                 for future in as_completed(futures):
                     try:
                         future.result()
-                        pbar.update(1)
                     except Exception as e:
                         logger.error(f"Exhaustive worker failed: {e}")
                         raise
-        else:
-            for future in as_completed(futures):
-                try:
-                    future.result()
-                except Exception as e:
-                    logger.error(f"Exhaustive worker failed: {e}")
-                    raise
-    
-    # Merge results
-    logger.info("Merging exhaustive comparison results...")
-    with engine.connect().execution_options(autocommit=True) as connection:
-        connection.execute(text(f"SELECT merge_processed_records('{job_schema}')"))
-        final_count = connection.execute(
-            text(f"SELECT COUNT(*) FROM {job_schema}.processed_records")
-        ).scalar()
-        logger.info(f"Merged {final_count} unique record pairs")
 
-def extract_processed_records_chunked(engine, job_schema, chunk_size=50000, logger=None, tqdm_flag=False):
+        # Merge results
+        logger.info("Merging exhaustive comparison results...")
+        with engine.begin() as connection:
+            connection.execute(text(f"SELECT merge_processed_records('{job_schema}')"))
+            final_count = connection.execute(
+                text(f"SELECT COUNT(*) FROM {job_schema}.processed_records")
+            ).scalar()
+            logger.info(f"Merged {final_count} unique record pairs")
+    finally:
+        engine.dispose()
+
+def extract_processed_records_chunked(database_url, job_schema, chunk_size=50000, logger=None, tqdm_flag=False):
     try:
         # Get total count first
-        with engine.connect() as connection:
+        engine = create_engine(database_url)
+        with engine.begin() as connection:
             result = connection.execute(
                 text(f"SELECT COUNT(*) FROM {job_schema}.processed_records")
             )
@@ -331,21 +331,20 @@ def extract_processed_records_chunked(engine, job_schema, chunk_size=50000, logg
                     yield chunk_df
                 else:
                     break
-                    
+
     except Exception as e:
         if logger:
             logger.error(f"Error extracting processed records: {e}")
         raise
+    finally:
+        engine.dispose()
 
 def _worker_create_blocking_keys(db_url, job_schema, records_table, batch_size, 
                                gid_start, gid_end, worker_id):
     """Worker function for parallel blocking key creation"""
     try:
         engine = create_engine(db_url)
-        with engine.connect().execution_options(autocommit=True) as connection:
-            # Set the search path to include the job schema
-            connection.execute(text(f"SET search_path TO {job_schema}, public"))
-            
+        with engine.begin() as connection:
             table_suffix = f"worker_{worker_id}"
             connection.execute(text(
                 "SELECT create_blocking_keys_test(:batch_size, :gid_start, :gid_end, :table_suffix, :job_schema, :records_table)"
@@ -357,10 +356,11 @@ def _worker_create_blocking_keys(db_url, job_schema, records_table, batch_size,
                 "job_schema": job_schema, 
                 "records_table": records_table
             })
-        engine.dispose()
     except Exception as e:
         logging.error(f"Worker {worker_id} error: {e}")
         raise
+    finally:
+        engine.dispose()
 
 def _worker_compare_records_optimized(db_url, job_schema, records_table,
                                     block_start, block_end, max_block_size,
@@ -368,10 +368,7 @@ def _worker_compare_records_optimized(db_url, job_schema, records_table,
                                     worker_id):
     try:
         engine = create_engine(db_url)
-        with engine.connect().execution_options(autocommit=True) as connection:
-            # Set the search path to include the job schema
-            connection.execute(text(f"SET search_path TO {job_schema}, public"))
-            
+        with engine.begin() as connection:
             connection.execute(text(
                 "SELECT compare_records_optimized_parallel(:block_start, :block_end, "
                 ":max_block_size, :window_size, :overlap, :similarity_threshold, "
@@ -387,19 +384,17 @@ def _worker_compare_records_optimized(db_url, job_schema, records_table,
                 "job_schema": job_schema, 
                 "records_table": records_table
             })
-        engine.dispose()
     except Exception as e:
         logging.error(f"Worker {worker_id} error: {e}")
         raise
+    finally:
+        engine.dispose()
 
 def _worker_compare_records_exhaustive(db_url, job_schema, records_table,
                                      gid_start, gid_end, worker_id):
     try:
         engine = create_engine(db_url)
-        with engine.connect().execution_options(autocommit=True) as connection:
-            # Set the search path to include the job schema
-            connection.execute(text(f"SET search_path TO {job_schema}, public"))
-            
+        with engine.begin() as connection:
             connection.execute(text(
                 "SELECT compare_records_exhaustive_parallel(:gid_start, :gid_end, "
                 ":table_suffix, :job_schema, :records_table)"
@@ -410,12 +405,13 @@ def _worker_compare_records_exhaustive(db_url, job_schema, records_table,
                 "job_schema": job_schema,  # Ensure job_schema is passed
                 "records_table": records_table
             })
-        engine.dispose()
     except Exception as e:
         logging.error(f"Worker {worker_id} error: {e}")
         raise
+    finally:
+        engine.dispose()
 
-def predict_chunked(engine, job_schema, relationship, model_directory, output_directory, 
+def predict_chunked(database_url, job_schema, relationship, model_directory, output_directory,
                    logger, chunk_size=50000, probable_match_threshold=None, match_threshold=None, tqdm_flag=False):
     try:
         model_path = os.path.join(model_directory, f'rf_{relationship}_model.pkl')
@@ -434,7 +430,7 @@ def predict_chunked(engine, job_schema, relationship, model_directory, output_di
         total_processed = 0
         
         # Process chunks
-        for chunk_df in extract_processed_records_chunked(engine, job_schema, chunk_size, logger, tqdm_flag):
+        for chunk_df in extract_processed_records_chunked(database_url, job_schema, chunk_size, logger, tqdm_flag):
             if len(chunk_df) == 0:
                 continue
                 

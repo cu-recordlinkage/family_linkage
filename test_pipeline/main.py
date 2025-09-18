@@ -112,9 +112,10 @@ def main(relationship_type, size_threshold, max_block_size, window_size,
         print("Setting up database connection...")
         db_config = config['database']
         db_string = f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}"
-        engine = create_engine(db_string, pool_size=20, max_overflow=30)
-        
+
         try:
+            engine = create_engine(db_string)
+
             # Step 6: Initialize database
             print("Initializing database schema...")
             tables_sql_path = os.path.join(project_root, 'scripts', 'postgres_tables.sql')
@@ -177,7 +178,7 @@ def main(relationship_type, size_threshold, max_block_size, window_size,
             prediction_start = time.time()
             
             results_summary = predict_chunked(
-                engine=engine,
+                database_url=db_string,
                 job_schema='public',
                 relationship=relationship_type,
                 model_directory=model_dir,
