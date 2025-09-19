@@ -60,8 +60,8 @@ DECLARE
 BEGIN
     -- Try to cast text to date
     BEGIN
-        date1 := dob1::date;
-        date2 := dob2::date;
+        date1 := nullif(dob1, '')::date;
+        date2 := nullif(dob2, '')::date;
     EXCEPTION WHEN OTHERS THEN
         -- If casting fails, return high difference
         RETURN 100;
@@ -174,9 +174,9 @@ BEGIN
                 r.last_name, 
                 r.zip, 
                 r.address,
-                r.dob::DATE as dob,
+                nullif(r.dob, '''')::DATE as dob,
                 r.sex,
-                EXTRACT(YEAR FROM r.dob::DATE) as birth_year,
+                EXTRACT(YEAR FROM nullif(r.dob, '''')::DATE) as birth_year,
                 soundex(r.last_name) as ln_soundex,
                 LEFT(r.last_name, 6) as ln_prefix
             FROM %s r
@@ -303,7 +303,7 @@ BEGIN
                             PARTITION BY rb.block_key 
                             ORDER BY rb.sort_key, r.id
                         ) AS row_num,
-                        EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob::DATE)) as age_years
+                        EXTRACT(YEAR FROM AGE(CURRENT_DATE, nullif(r.dob, '''')::DATE)) as age_years
                     FROM %I.record_blocks rb
                     JOIN %s r ON rb.id = r.id
                     WHERE rb.block_key = $1
@@ -432,7 +432,7 @@ BEGIN
        WITH age_data AS (
            SELECT 
                r.*,
-               EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob::DATE)) as age_years
+               EXTRACT(YEAR FROM AGE(CURRENT_DATE, nullif(r.dob, '''')::DATE)) as age_years
            FROM %s r
        )
        SELECT 
@@ -649,7 +649,7 @@ BEGIN
    WITH age_data AS (
        SELECT 
            r.*,
-           EXTRACT(YEAR FROM AGE(CURRENT_DATE, r.dob::DATE)) as age_years
+           EXTRACT(YEAR FROM AGE(CURRENT_DATE, nullif(r.dob, '')::DATE)) as age_years
        FROM records r
    )
    SELECT 
